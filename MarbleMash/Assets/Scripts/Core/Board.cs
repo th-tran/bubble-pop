@@ -167,11 +167,13 @@ public class Board : MonoBehaviour
                 clickedMarble.Move(clickedTile.xIndex, clickedTile.yIndex, swapTime);
                 targetMarble.Move(targetTile.xIndex, targetTile.yIndex, swapTime);
             }
+            else
+            {
+                yield return new WaitForSeconds(swapTime);
 
-            yield return new WaitForSeconds(swapTime);
-
-            HighlightMatchesAt(clickedTile.xIndex, clickedTile.yIndex);
-            HighlightMatchesAt(targetTile.xIndex, targetTile.yIndex);
+                ClearMarbleAt(clickedMarbleMatches);
+                ClearMarbleAt(targetMarbleMatches);
+            }
         }
     }
 
@@ -226,7 +228,7 @@ public class Board : MonoBehaviour
 
             Marble nextMarble = m_allMarbles[nextX, nextY];
 
-            if (nextMarble.matchValue == startMarble.matchValue && !matches.Contains(nextMarble))
+            if (nextMarble != null && nextMarble.matchValue == startMarble.matchValue && !matches.Contains(nextMarble))
             {
                 matches.Add(nextMarble);
             }
@@ -301,6 +303,38 @@ public class Board : MonoBehaviour
             for (int j = 0; j < height; j++)
             {
                 HighlightMatchesAt(i, j);
+            }
+        }
+    }
+
+    void ClearMarbleAt(int x, int y)
+    {
+        Marble marbleToClear = m_allMarbles[x,y];
+
+        if (marbleToClear != null)
+        {
+            m_allMarbles[x,y] = null;
+            Destroy(marbleToClear.gameObject);
+        }
+
+        HighlightTileOff(x, y);
+    }
+
+    void ClearMarbleAt(List<Marble> marbles)
+    {
+        foreach (Marble marble in marbles)
+        {
+            ClearMarbleAt(marble.xIndex, marble.yIndex);
+        }
+    }
+
+    void ClearBoard()
+    {
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                ClearMarbleAt(i, j);
             }
         }
     }
