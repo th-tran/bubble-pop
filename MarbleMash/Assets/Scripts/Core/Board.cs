@@ -28,8 +28,7 @@ public class Board : MonoBehaviour
         m_allMarbles = new Marble[width,height];
         SetupTiles();
         SetupCamera();
-        FillRandom();
-        HighlightMatches();
+        FillBoard();
     }
 
     void SetupTiles()
@@ -98,21 +97,52 @@ public class Board : MonoBehaviour
         return (x >= 0 && x < width && y >= 0 && y < height);
     }
 
-    void FillRandom()
+    Marble FillRandomAt(int x, int y)
     {
+        GameObject randomMarble = Instantiate(GetRandomMarble(), Vector3.zero, Quaternion.identity) as GameObject;
+
+        if (randomMarble != null)
+        {
+            Marble marble = randomMarble.GetComponent<Marble>();
+            marble.Init(this);
+            PlaceMarble(marble, x, y);
+            return marble;
+        }
+        return null;
+    }
+
+    void FillBoard()
+    {
+        int iterations = 0;
+        int maxIterations = 100;
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                GameObject randomMarble = Instantiate(GetRandomMarble(), Vector3.zero, Quaternion.identity) as GameObject;
+                Marble marble = FillRandomAt(i, j);
 
-                if (randomMarble != null)
+                while (HasMatchOnFill(i, j))
                 {
-                    randomMarble.GetComponent<Marble>().Init(this);
-                    PlaceMarble(randomMarble.GetComponent<Marble>(), i, j);
+                    ClearMarbleAt(i, j);
+                    marble = FillRandomAt(i, j);
+
+                    iterations++;
+                    if (iterations >= maxIterations)
+                    {
+                        Debug.LogWarning("BOARD: Broke out of infinite while loop.");
+                        break;
+                    }
                 }
             }
         }
+    }
+
+    bool HasMatchOnFill(int x, int y, int minLength = 3)
+    {
+        List<Marble> leftMatches = FindMatches(x, y, new Vector2(-1, 0), minLength);
+        List<Marble> downwardMatches = FindMatches(x, y, new Vector2(0, -1), minLength);
+
+        return (leftMatches.Count > 0 || downwardMatches.Count > 0);
     }
 
     public void ClickTile(Tile tile)
