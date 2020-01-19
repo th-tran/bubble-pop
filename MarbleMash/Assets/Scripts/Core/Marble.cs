@@ -7,6 +7,8 @@ public class Marble : MonoBehaviour
     public int xIndex;
     public int yIndex;
 
+    Board m_board;
+
     bool m_isMoving = false;
 
     public enum InterpolationType
@@ -39,6 +41,11 @@ public class Marble : MonoBehaviour
         }
     }
 
+    public void Init(Board board)
+    {
+        m_board = board;
+    }
+
     public void SetCoordinates(int x, int y)
     {
         xIndex = x;
@@ -66,9 +73,10 @@ public class Marble : MonoBehaviour
             if (Vector3.Distance(transform.position, destination) < 0.01f)
             {
                 reachedDestination = true;
-                // Round position to final destination
-                transform.position = destination;
-                SetCoordinates((int) destination.x, (int) destination.y);
+                if (m_board != null)
+                {
+                    m_board.PlaceMarble(this, (int) destination.x, (int) destination.y);
+                }
                 break;
             }
 

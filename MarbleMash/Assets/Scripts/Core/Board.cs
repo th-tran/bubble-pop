@@ -12,8 +12,13 @@ public class Board : MonoBehaviour
     public GameObject tilePrefab;
     public GameObject[] marblePrefabs;
 
+    public float swapTime = 0.3f;
+
     Tile[,] m_allTiles;
     Marble[,] m_allMarbles;
+
+    Tile m_clickedTile;
+    Tile m_targetTile;
 
     // Start is called before the first frame update
     void Start()
@@ -68,7 +73,7 @@ public class Board : MonoBehaviour
         return marblePrefabs[randomIndex];
     }
 
-    void PlaceMarble(Marble marble, int x, int y)
+    public void PlaceMarble(Marble marble, int x, int y)
     {
         if (marble == null)
         {
@@ -78,7 +83,17 @@ public class Board : MonoBehaviour
 
         marble.transform.position = new Vector3(x, y, 0);
         marble.transform.rotation = Quaternion.identity;
+        if (IsWithinBounds(x,y))
+        {
+            m_allMarbles[x,y] = marble;
+        }
+        marble.transform.parent = transform;
         marble.SetCoordinates(x,y);
+    }
+
+    bool IsWithinBounds(int x, int y)
+    {
+        return (x >= 0 && x < width && y >= 0 && y < height);
     }
 
     void FillRandom()
@@ -91,9 +106,61 @@ public class Board : MonoBehaviour
 
                 if (randomMarble != null)
                 {
+                    randomMarble.GetComponent<Marble>().Init(this);
                     PlaceMarble(randomMarble.GetComponent<Marble>(), i, j);
                 }
             }
         }
+    }
+
+    public void ClickTile(Tile tile)
+    {
+        if (m_clickedTile == null)
+        {
+            m_clickedTile = tile;
+        }
+    }
+
+    public void DragToTile(Tile tile)
+    {
+        if (m_clickedTile != null && IsAdjacent(tile, m_clickedTile))
+        {
+            m_targetTile = tile;
+        }
+    }
+
+    public void ReleaseTile()
+    {
+        if (m_clickedTile != null && m_targetTile != null)
+        {
+            SwitchTiles(m_clickedTile, m_targetTile);
+        }
+
+        m_clickedTile = null;
+        m_targetTile = null;
+    }
+
+    void SwitchTiles(Tile clickedTile, Tile targetTile)
+    {
+        Marble clickedMarble = m_allMarbles[clickedTile.xIndex, clickedTile.yIndex];
+        Marble targetMarble = m_allMarbles[targetTile.xIndex, targetTile.yIndex];
+
+        clickedMarble.Move(targetTile.xIndex, targetTile.yIndex, swapTime);
+        targetMarble.Move(clickedTile.xIndex, clickedTile.yIndex, swapTime);
+    }
+
+    bool IsAdjacent(Tile start, Tile end)
+    {
+        if (Mathf.Abs(start.xIndex - end.xIndex) == 1 && start.yIndex == end.yIndex)
+        {
+            return true;
+        }
+
+        if (Mathf.Abs(start.yIndex - end.yIndex) == 1  && start.xIndex == end.xIndex)
+        {
+            return true;
+        }
+
+        return false;
     }
 }
