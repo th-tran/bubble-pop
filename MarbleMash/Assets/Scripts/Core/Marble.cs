@@ -9,6 +9,16 @@ public class Marble : MonoBehaviour
 
     bool m_isMoving = false;
 
+    public enum InterpolationType
+    {
+        Linear,
+        EaseOut,
+        EaseIn,
+        SmoothStep,
+        SmootherStep
+    }
+    public InterpolationType interpolation = InterpolationType.SmootherStep;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,13 +66,36 @@ public class Marble : MonoBehaviour
             if (Vector3.Distance(transform.position, destination) < 0.01f)
             {
                 reachedDestination = true;
+                // Round position to final destination
                 transform.position = destination;
                 SetCoordinates((int) destination.x, (int) destination.y);
                 break;
             }
 
+            // Track total running time and
+            // use it to calculate lerp value
             elapsedTime += Time.deltaTime;
             float t = Mathf.Clamp(elapsedTime / timeToMove, 0f, 1f);
+
+            // Set movement curve
+            switch (interpolation)
+            {
+                case InterpolationType.Linear:
+                    break;
+                case InterpolationType.EaseOut:
+                    t = Mathf.Sin(t * Mathf.PI * 0.5f);
+                    break;
+                case InterpolationType.EaseIn:
+                    t = 1 - Mathf.Cos(t * Mathf.PI * 0.5f);
+                    break;
+                case InterpolationType.SmoothStep:
+                    t = t*t*(3 - 2*t);
+                    break;
+                case InterpolationType.SmootherStep:
+                    t = t*t*t*(t*(t*6 - 15) + 10);
+                    break;
+            }
+            // Move the marble
             transform.position = Vector3.Lerp(startPosition, destination, t);
 
             // Wait until next frame

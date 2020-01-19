@@ -410,6 +410,14 @@ MonoBehaviour:
   borderSize: 2
   tilePrefab: {fileID: 520010591576032554, guid: c6066261de5bacf48b973a1dd3c43e50,
     type: 3}
+  marblePrefabs:
+  - {fileID: 4521858347332047992, guid: 17b99f3d74a748c4c9a9a444d22afede, type: 3}
+  - {fileID: 377635285433233982, guid: 1482f4426b3ac164398fb3ab5497e650, type: 3}
+  - {fileID: 654280790619772838, guid: 8b7fc9c6aecb95042815c8be8191547c, type: 3}
+  - {fileID: 4057148001192603659, guid: d6d56bfdfe0b6db4f80bcc9c76cc877a, type: 3}
+  - {fileID: 1141692940708406369, guid: 7728c0462da0a0e40be154a34d3e1858, type: 3}
+  - {fileID: 12403855420156970, guid: b1a126548fc8ffb47aebfeac3d76b95c, type: 3}
+  - {fileID: 3443881691154943669, guid: b12cb961880445e46828781a47cbb4ec, type: 3}
 --- !u!4 &1421813962
 Transform:
   m_ObjectHideFlags: 0
