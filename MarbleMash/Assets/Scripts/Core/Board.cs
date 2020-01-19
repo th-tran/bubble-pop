@@ -10,15 +10,19 @@ public class Board : MonoBehaviour
     public int borderSize;
 
     public GameObject tilePrefab;
+    public GameObject[] marblePrefabs;
 
     Tile[,] m_allTiles;
+    Marble[,] m_allMarbles;
 
     // Start is called before the first frame update
     void Start()
     {
         m_allTiles = new Tile[width,height];
+        m_allMarbles = new Marble[width,height];
         SetupTiles();
         SetupCamera();
+        FillRandom();
     }
 
     void SetupTiles()
@@ -50,5 +54,46 @@ public class Board : MonoBehaviour
         float horizontalSize = ((float) width/2f + (float) borderSize) / aspectRatio;
 
         Camera.main.orthographicSize = (verticalSize > horizontalSize) ? verticalSize : horizontalSize;
+    }
+
+    GameObject GetRandomMarble()
+    {
+        int randomIndex = Random.Range(0, marblePrefabs.Length);
+
+        if (marblePrefabs[randomIndex] == null)
+        {
+            Debug.LogWarning("BOARD: " + randomIndex + " does not contain a valid Marble prefab!");
+        }
+
+        return marblePrefabs[randomIndex];
+    }
+
+    void PlaceMarble(Marble marble, int x, int y)
+    {
+        if (marble == null)
+        {
+            Debug.LogWarning("BOARD: Invalid Marble!");
+            return;
+        }
+
+        marble.transform.position = new Vector3(x, y, 0);
+        marble.transform.rotation = Quaternion.identity;
+        marble.SetCoordinates(x,y);
+    }
+
+    void FillRandom()
+    {
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                GameObject randomMarble = Instantiate(GetRandomMarble(), Vector3.zero, Quaternion.identity) as GameObject;
+
+                if (randomMarble != null)
+                {
+                    PlaceMarble(randomMarble.GetComponent<Marble>(), i, j);
+                }
+            }
+        }
     }
 }
