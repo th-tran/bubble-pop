@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6433023154756624656}
   - component: {fileID: -6978726072511596861}
   m_Layer: 0
-  m_Name: GreenDot
+  m_Name: GreenMarble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,3 +94,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xIndex: 0
   yIndex: 0
+  interpolation: 4
+  matchValue: 4

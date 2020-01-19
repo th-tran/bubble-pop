@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4656439788658777198}
   - component: {fileID: -1674985904465606935}
   m_Layer: 0
-  m_Name: BlueDot
+  m_Name: BlueMarble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,3 +94,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xIndex: 0
   yIndex: 0
+  interpolation: 4
+  matchValue: 1

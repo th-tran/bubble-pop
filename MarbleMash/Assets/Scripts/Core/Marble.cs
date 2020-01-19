@@ -18,8 +18,23 @@ public class Marble : MonoBehaviour
         EaseIn,
         SmoothStep,
         SmootherStep
+    };
+
+    public enum MatchValue
+    {
+        Yellow,
+        Blue,
+        Magenta,
+        Indigo,
+        Green,
+        Teal,
+        Red,
+        Cyan,
+        Wild
     }
+
     public InterpolationType interpolation = InterpolationType.SmootherStep;
+    public MatchValue matchValue;
 
     // Start is called before the first frame update
     void Start()

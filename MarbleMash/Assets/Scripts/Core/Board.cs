@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Board : MonoBehaviour
@@ -28,6 +29,7 @@ public class Board : MonoBehaviour
         SetupTiles();
         SetupCamera();
         FillRandom();
+        HighlightMatches();
     }
 
     void SetupTiles()
@@ -142,11 +144,35 @@ public class Board : MonoBehaviour
 
     void SwitchTiles(Tile clickedTile, Tile targetTile)
     {
+        StartCoroutine(SwitchTilesRoutine(clickedTile, targetTile));
+    }
+
+    IEnumerator SwitchTilesRoutine(Tile clickedTile, Tile targetTile)
+    {
         Marble clickedMarble = m_allMarbles[clickedTile.xIndex, clickedTile.yIndex];
         Marble targetMarble = m_allMarbles[targetTile.xIndex, targetTile.yIndex];
 
-        clickedMarble.Move(targetTile.xIndex, targetTile.yIndex, swapTime);
-        targetMarble.Move(clickedTile.xIndex, clickedTile.yIndex, swapTime);
+        if (clickedMarble != null && targetMarble != null)
+        {
+            clickedMarble.Move(targetTile.xIndex, targetTile.yIndex, swapTime);
+            targetMarble.Move(clickedTile.xIndex, clickedTile.yIndex, swapTime);
+
+            yield return new WaitForSeconds(swapTime);
+
+            List<Marble> clickedMarbleMatches = FindMatchesAt(clickedTile.xIndex, clickedTile.yIndex);
+            List<Marble> targetMarbleMatches = FindMatchesAt(targetTile.xIndex, targetTile.yIndex);
+
+            if (clickedMarbleMatches.Count == 0 && targetMarbleMatches.Count == 0)
+            {
+                clickedMarble.Move(clickedTile.xIndex, clickedTile.yIndex, swapTime);
+                targetMarble.Move(targetTile.xIndex, targetTile.yIndex, swapTime);
+            }
+
+            yield return new WaitForSeconds(swapTime);
+
+            HighlightMatchesAt(clickedTile.xIndex, clickedTile.yIndex);
+            HighlightMatchesAt(targetTile.xIndex, targetTile.yIndex);
+        }
     }
 
     bool IsAdjacent(Tile start, Tile end)
@@ -162,5 +188,120 @@ public class Board : MonoBehaviour
         }
 
         return false;
+    }
+
+    List<Marble> FindMatches(int startX, int startY, Vector2 searchDirection, int minLength = 3)
+    {
+        List<Marble> matches = new List<Marble>();
+        Marble startMarble = null;
+
+        if (IsWithinBounds(startX, startY))
+        {
+            startMarble = m_allMarbles[startX, startY];
+        }
+
+        if (startMarble != null)
+        {
+            matches.Add(startMarble);
+        }
+        else
+        {
+            return new List<Marble>();
+        }
+
+        int nextX;
+        int nextY;
+
+        int maxValue = (width > height) ? width : height;
+
+        for (int i = 1; i < maxValue - 1; i++)
+        {
+            nextX = startX + (int) Mathf.Clamp(searchDirection.x, -1, 1) * i;
+            nextY = startY + (int) Mathf.Clamp(searchDirection.y, -1, 1) * i;
+
+            if (!IsWithinBounds(nextX, nextY))
+            {
+                break;
+            }
+
+            Marble nextMarble = m_allMarbles[nextX, nextY];
+
+            if (nextMarble.matchValue == startMarble.matchValue && !matches.Contains(nextMarble))
+            {
+                matches.Add(nextMarble);
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return (matches.Count >= minLength) ? matches : new List<Marble>();
+    }
+
+    List<Marble> FindVerticalMatches(int startX, int startY, int minLength = 3)
+    {
+        List<Marble> upwardMatches = FindMatches(startX, startY, new Vector2(0,1), 2);
+        List<Marble> downwardMatches = FindMatches(startX, startY, new Vector2(0,-1), 2);
+
+        var combinedMatches = upwardMatches.Union(downwardMatches).ToList();
+
+        return (combinedMatches.Count >= minLength) ? combinedMatches : new List<Marble>();
+    }
+
+    List<Marble> FindHorizontalMatches(int startX, int startY, int minLength = 3)
+    {
+        List<Marble> rightMatches = FindMatches(startX, startY, new Vector2(1,0), 2);
+        List<Marble> leftMatches = FindMatches(startX, startY, new Vector2(-1,0), 2);
+
+        var combinedMatches = rightMatches.Union(leftMatches).ToList();
+
+        return (combinedMatches.Count >= minLength) ? combinedMatches : new List<Marble>();
+    }
+
+    List<Marble> FindMatchesAt(int x, int y, int minLength = 3)
+    {
+        List<Marble> horizontalMatches = FindHorizontalMatches(x, y, minLength);
+        List<Marble> verticalMatches = FindVerticalMatches(x, y, minLength);
+
+        var combinedMatches = horizontalMatches.Union(verticalMatches).ToList();
+        return combinedMatches;
+    }
+
+    void HighlightTileOff(int x, int y)
+    {
+        SpriteRenderer spriteRenderer = m_allTiles[x,y].GetComponent<SpriteRenderer>();
+        spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 0);
+    }
+
+    void HighlightTileOn(int x, int y, Color color)
+    {
+        SpriteRenderer spriteRenderer = m_allTiles[x,y].GetComponent<SpriteRenderer>();
+        spriteRenderer.color = color;
+    }
+
+
+    void HighlightMatchesAt(int x, int y)
+    {
+        HighlightTileOff(x, y);
+
+        var combinedMatches = FindMatchesAt(x, y);
+        if (combinedMatches.Count > 0)
+        {
+            foreach (Marble marble in combinedMatches)
+            {
+                HighlightTileOn(marble.xIndex, marble.yIndex, marble.GetComponent<SpriteRenderer>().color);
+            }
+        }
+    }
+    void HighlightMatches()
+    {
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                HighlightMatchesAt(i, j);
+            }
+        }
     }
 }
