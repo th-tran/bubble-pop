@@ -203,6 +203,9 @@ public class Board : MonoBehaviour
 
                 ClearMarbleAt(clickedMarbleMatches);
                 ClearMarbleAt(targetMarbleMatches);
+
+                CollapseColumn(clickedMarbleMatches);
+                CollapseColumn(targetMarbleMatches);
             }
         }
     }
@@ -367,5 +370,66 @@ public class Board : MonoBehaviour
                 ClearMarbleAt(i, j);
             }
         }
+    }
+
+    List<Marble> CollapseColumn(int column, float collapseTime = 0.1f)
+    {
+        List<Marble> movingMarbles = new List<Marble>();
+
+        for (int i = 0; i < height - 1; i++)
+        {
+            if (m_allMarbles[column, i] == null)
+            {
+                for (int j = i + 1; j < height; j++)
+                {
+                    if (m_allMarbles[column, j] != null)
+                    {
+                        m_allMarbles[column, j].Move(column, i, collapseTime);
+
+                        m_allMarbles[column, i] = m_allMarbles[column, j];
+                        m_allMarbles[column, i].SetCoordinates(column, i);
+
+                        if (!movingMarbles.Contains(m_allMarbles[column, i]))
+                        {
+                            movingMarbles.Add(m_allMarbles[column, i]);
+                        }
+
+                        m_allMarbles[column, j] = null;
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        return movingMarbles;
+    }
+
+    List<Marble> CollapseColumn(List<Marble> marbles)
+    {
+        List<Marble> movingMarbles = new List<Marble>();
+        List<int> columnsToCollapse = GetColumns(marbles);
+
+        foreach (int column in columnsToCollapse)
+        {
+            movingMarbles = movingMarbles.Union(CollapseColumn(column)).ToList();
+        }
+
+        return movingMarbles;
+    }
+
+    List<int> GetColumns(List<Marble> marbles)
+    {
+        List<int> columns = new List<int>();
+
+        foreach (Marble marble in marbles)
+        {
+            if (!columns.Contains(marble.xIndex))
+            {
+                columns.Add(marble.xIndex);
+            }
+        }
+
+        return columns;
     }
 }
