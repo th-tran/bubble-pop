@@ -201,11 +201,7 @@ public class Board : MonoBehaviour
             {
                 yield return new WaitForSeconds(swapTime);
 
-                ClearMarbleAt(clickedMarbleMatches);
-                ClearMarbleAt(targetMarbleMatches);
-
-                CollapseColumn(clickedMarbleMatches);
-                CollapseColumn(targetMarbleMatches);
+                ClearAndRefillBoard(clickedMarbleMatches.Union(targetMarbleMatches).ToList());
             }
         }
     }
@@ -303,6 +299,21 @@ public class Board : MonoBehaviour
         return combinedMatches;
     }
 
+    List<Marble> FindMatchesAt(List<Marble> marbles, int minLength = 3)
+    {
+        List<Marble> matches = new List<Marble>();
+
+        foreach (Marble marble in marbles)
+        {
+            if (marble != null)
+            {
+                matches = matches.Union(FindMatchesAt(marble.xIndex, marble.yIndex, minLength)).ToList();
+            }
+        }
+
+        return matches;
+    }
+
     void HighlightTileOff(int x, int y)
     {
         SpriteRenderer spriteRenderer = m_allTiles[x,y].GetComponent<SpriteRenderer>();
@@ -325,7 +336,10 @@ public class Board : MonoBehaviour
         {
             foreach (Marble marble in combinedMatches)
             {
-                HighlightTileOn(marble.xIndex, marble.yIndex, marble.GetComponent<SpriteRenderer>().color);
+                if (marble != null)
+                {
+                    HighlightTileOn(marble.xIndex, marble.yIndex, marble.GetComponent<SpriteRenderer>().color);
+                }
             }
         }
     }
@@ -336,6 +350,17 @@ public class Board : MonoBehaviour
             for (int j = 0; j < height; j++)
             {
                 HighlightMatchesAt(i, j);
+            }
+        }
+    }
+
+    void HighlightMarbles(List<Marble> marbles)
+    {
+        foreach (Marble marble in marbles)
+        {
+            if (marble != null)
+            {
+                HighlightTileOn(marble.xIndex, marble.yIndex, marble.GetComponent<SpriteRenderer>().color);
             }
         }
     }
@@ -357,7 +382,10 @@ public class Board : MonoBehaviour
     {
         foreach (Marble marble in marbles)
         {
-            ClearMarbleAt(marble.xIndex, marble.yIndex);
+            if (marble != null)
+            {
+                ClearMarbleAt(marble.xIndex, marble.yIndex);
+            }
         }
     }
 
@@ -431,5 +459,51 @@ public class Board : MonoBehaviour
         }
 
         return columns;
+    }
+
+    void ClearAndRefillBoard(List<Marble> marbles)
+    {
+        StartCoroutine(ClearAndRefillBoardRoutine(marbles));
+    }
+
+    IEnumerator ClearAndRefillBoardRoutine(List<Marble> marbles)
+    {
+        StartCoroutine(ClearAndCollapseRoutine(marbles));
+        yield return null;
+
+        // TODO: Refill board
+    }
+
+    IEnumerator ClearAndCollapseRoutine(List<Marble> marbles)
+    {
+        List<Marble> movingMarbles = new List<Marble>();
+        List<Marble> matches = new List<Marble>();
+
+        HighlightMarbles(marbles);
+
+        yield return new WaitForSeconds(0.25f);
+
+        bool isFinished = false;
+        while (!isFinished)
+        {
+            ClearMarbleAt(marbles);
+
+            yield return new WaitForSeconds(0.25f);
+
+            movingMarbles = CollapseColumn(marbles);
+
+            yield return new WaitForSeconds(0.25f);
+
+            matches = FindMatchesAt(movingMarbles);
+
+            if (matches.Count == 0)
+            {
+                isFinished = true;
+            }
+            else
+            {
+                yield return StartCoroutine(ClearAndCollapseRoutine(matches));
+            }
+        }
     }
 }
