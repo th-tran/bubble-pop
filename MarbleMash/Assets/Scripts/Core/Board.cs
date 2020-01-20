@@ -30,7 +30,7 @@ public class Board : MonoBehaviour
         m_allMarbles = new Marble[width,height];
         SetupTiles();
         SetupCamera();
-        FillBoard();
+        FillBoard(10, 0.5f);
     }
 
     void SetupTiles()
@@ -99,21 +99,27 @@ public class Board : MonoBehaviour
         return (x >= 0 && x < width && y >= 0 && y < height);
     }
 
-    Marble FillRandomAt(int x, int y)
+    Marble FillRandomAt(int x, int y, int falseYOffset = 0, float moveTime = 0.1f)
     {
         GameObject randomMarble = Instantiate(GetRandomMarble(), Vector3.zero, Quaternion.identity) as GameObject;
 
         if (randomMarble != null)
         {
-            Marble marble = randomMarble.GetComponent<Marble>();
-            marble.Init(this);
-            PlaceMarble(marble, x, y);
-            return marble;
+            randomMarble.GetComponent<Marble>().Init(this);
+            PlaceMarble(randomMarble.GetComponent<Marble>(), x, y);
+
+            if (falseYOffset != 0)
+            {
+                randomMarble.transform.position = new Vector3(x, y + falseYOffset, 0);
+                randomMarble.GetComponent<Marble>().Move(x, y, moveTime);
+            }
+
+            return randomMarble.GetComponent<Marble>();
         }
         return null;
     }
 
-    void FillBoard()
+    void FillBoard(int falseYOffset = 0, float moveTime = 0.1f)
     {
         int iterations = 0;
         int maxIterations = 100;
@@ -121,18 +127,21 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                Marble marble = FillRandomAt(i, j);
-
-                while (HasMatchOnFill(i, j))
+                if (m_allMarbles[i,j] == null)
                 {
-                    ClearMarbleAt(i, j);
-                    marble = FillRandomAt(i, j);
+                    Marble marble = FillRandomAt(i, j, falseYOffset, moveTime);
 
-                    iterations++;
-                    if (iterations >= maxIterations)
+                    while (HasMatchOnFill(i, j))
                     {
-                        Debug.LogWarning("BOARD: Broke out of infinite while loop.");
-                        break;
+                        ClearMarbleAt(i, j);
+                        marble = FillRandomAt(i, j, falseYOffset, moveTime);
+
+                        iterations++;
+                        if (iterations >= maxIterations)
+                        {
+                            Debug.LogWarning("BOARD: Broke out of infinite while loop.");
+                            break;
+                        }
                     }
                 }
             }
@@ -200,11 +209,11 @@ public class Board : MonoBehaviour
                 {
                     clickedMarble.Move(clickedTile.xIndex, clickedTile.yIndex, swapTime);
                     targetMarble.Move(targetTile.xIndex, targetTile.yIndex, swapTime);
+
+                    yield return new WaitForSeconds(swapTime);
                 }
                 else
                 {
-                    yield return new WaitForSeconds(swapTime);
-
                     ClearAndRefillBoard(clickedMarbleMatches.Union(targetMarbleMatches).ToList());
                 }
             }
@@ -317,6 +326,22 @@ public class Board : MonoBehaviour
         }
 
         return matches;
+    }
+
+    List<Marble> FindAllMatches()
+    {
+        List<Marble> combinedMatches = new List<Marble>();
+
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                List<Marble> matches = FindMatchesAt(i, j);
+                combinedMatches = combinedMatches.Union(matches).ToList();
+            }
+        }
+
+        return combinedMatches;
     }
 
     void HighlightTileOff(int x, int y)
@@ -475,9 +500,15 @@ public class Board : MonoBehaviour
     {
         m_playerInputEnabled = false;
 
-        yield return StartCoroutine(ClearAndCollapseRoutine(marbles));
+        List<Marble> matches = marbles;
+        do
+        {
+            yield return StartCoroutine(ClearAndCollapseRoutine(matches));
+            yield return StartCoroutine(RefillRoutine());
+            matches = FindAllMatches();
+        }
+        while (matches.Count != 0);
 
-        // TODO: Refill board
         m_playerInputEnabled = true;
     }
 
@@ -488,7 +519,7 @@ public class Board : MonoBehaviour
 
         HighlightMarbles(marbles);
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.25f);
 
         bool isFinished = false;
         while (!isFinished)
@@ -504,8 +535,6 @@ public class Board : MonoBehaviour
                 yield return null;
             }
 
-            yield return new WaitForSeconds(0.5f);
-
             matches = FindMatchesAt(movingMarbles);
 
             if (matches.Count == 0)
@@ -517,6 +546,12 @@ public class Board : MonoBehaviour
                 yield return StartCoroutine(ClearAndCollapseRoutine(matches));
             }
         }
+    }
+
+    IEnumerator RefillRoutine()
+    {
+        FillBoard(10, 0.5f);
+        yield return new WaitForSeconds(0.5f);
     }
 
     bool IsCollapsed(List<Marble> marbles)
