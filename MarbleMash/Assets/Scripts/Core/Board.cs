@@ -21,6 +21,8 @@ public class Board : MonoBehaviour
     Tile m_clickedTile;
     Tile m_targetTile;
 
+    bool m_playerInputEnabled = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -179,29 +181,32 @@ public class Board : MonoBehaviour
 
     IEnumerator SwitchTilesRoutine(Tile clickedTile, Tile targetTile)
     {
-        Marble clickedMarble = m_allMarbles[clickedTile.xIndex, clickedTile.yIndex];
-        Marble targetMarble = m_allMarbles[targetTile.xIndex, targetTile.yIndex];
-
-        if (clickedMarble != null && targetMarble != null)
+        if (m_playerInputEnabled)
         {
-            clickedMarble.Move(targetTile.xIndex, targetTile.yIndex, swapTime);
-            targetMarble.Move(clickedTile.xIndex, clickedTile.yIndex, swapTime);
+            Marble clickedMarble = m_allMarbles[clickedTile.xIndex, clickedTile.yIndex];
+            Marble targetMarble = m_allMarbles[targetTile.xIndex, targetTile.yIndex];
 
-            yield return new WaitForSeconds(swapTime);
-
-            List<Marble> clickedMarbleMatches = FindMatchesAt(clickedTile.xIndex, clickedTile.yIndex);
-            List<Marble> targetMarbleMatches = FindMatchesAt(targetTile.xIndex, targetTile.yIndex);
-
-            if (clickedMarbleMatches.Count == 0 && targetMarbleMatches.Count == 0)
+            if (clickedMarble != null && targetMarble != null)
             {
-                clickedMarble.Move(clickedTile.xIndex, clickedTile.yIndex, swapTime);
-                targetMarble.Move(targetTile.xIndex, targetTile.yIndex, swapTime);
-            }
-            else
-            {
+                clickedMarble.Move(targetTile.xIndex, targetTile.yIndex, swapTime);
+                targetMarble.Move(clickedTile.xIndex, clickedTile.yIndex, swapTime);
+
                 yield return new WaitForSeconds(swapTime);
 
-                ClearAndRefillBoard(clickedMarbleMatches.Union(targetMarbleMatches).ToList());
+                List<Marble> clickedMarbleMatches = FindMatchesAt(clickedTile.xIndex, clickedTile.yIndex);
+                List<Marble> targetMarbleMatches = FindMatchesAt(targetTile.xIndex, targetTile.yIndex);
+
+                if (clickedMarbleMatches.Count == 0 && targetMarbleMatches.Count == 0)
+                {
+                    clickedMarble.Move(clickedTile.xIndex, clickedTile.yIndex, swapTime);
+                    targetMarble.Move(targetTile.xIndex, targetTile.yIndex, swapTime);
+                }
+                else
+                {
+                    yield return new WaitForSeconds(swapTime);
+
+                    ClearAndRefillBoard(clickedMarbleMatches.Union(targetMarbleMatches).ToList());
+                }
             }
         }
     }
@@ -412,7 +417,7 @@ public class Board : MonoBehaviour
                 {
                     if (m_allMarbles[column, j] != null)
                     {
-                        m_allMarbles[column, j].Move(column, i, collapseTime);
+                        m_allMarbles[column, j].Move(column, i, collapseTime * (j - i));
 
                         m_allMarbles[column, i] = m_allMarbles[column, j];
                         m_allMarbles[column, i].SetCoordinates(column, i);
@@ -468,10 +473,12 @@ public class Board : MonoBehaviour
 
     IEnumerator ClearAndRefillBoardRoutine(List<Marble> marbles)
     {
-        StartCoroutine(ClearAndCollapseRoutine(marbles));
-        yield return null;
+        m_playerInputEnabled = false;
+
+        yield return StartCoroutine(ClearAndCollapseRoutine(marbles));
 
         // TODO: Refill board
+        m_playerInputEnabled = true;
     }
 
     IEnumerator ClearAndCollapseRoutine(List<Marble> marbles)
@@ -481,7 +488,7 @@ public class Board : MonoBehaviour
 
         HighlightMarbles(marbles);
 
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.5f);
 
         bool isFinished = false;
         while (!isFinished)
@@ -492,7 +499,12 @@ public class Board : MonoBehaviour
 
             movingMarbles = CollapseColumn(marbles);
 
-            yield return new WaitForSeconds(0.25f);
+            while (!IsCollapsed(movingMarbles))
+            {
+                yield return null;
+            }
+
+            yield return new WaitForSeconds(0.5f);
 
             matches = FindMatchesAt(movingMarbles);
 
@@ -505,5 +517,20 @@ public class Board : MonoBehaviour
                 yield return StartCoroutine(ClearAndCollapseRoutine(matches));
             }
         }
+    }
+
+    bool IsCollapsed(List<Marble> marbles)
+    {
+        foreach (Marble marble in marbles)
+        {
+            if (marble != null)
+            {
+                if (marble.transform.position.y - (float) marble.yIndex > 0.001f)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
