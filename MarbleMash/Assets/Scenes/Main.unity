@@ -405,19 +405,91 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4abcf4eae24f300429662a2b91d8f450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 7
+  width: 8
   height: 9
   borderSize: 2
-  tilePrefab: {fileID: 520010591576032554, guid: c6066261de5bacf48b973a1dd3c43e50,
+  tileNormalPrefab: {fileID: 520010591576032554, guid: c6066261de5bacf48b973a1dd3c43e50,
+    type: 3}
+  tileObstaclePrefab: {fileID: 877982029463913109, guid: 37cc377765bee294089d5bab86467964,
     type: 3}
   marblePrefabs:
-  - {fileID: 4521858347332047992, guid: 17b99f3d74a748c4c9a9a444d22afede, type: 3}
-  - {fileID: 377635285433233982, guid: 1482f4426b3ac164398fb3ab5497e650, type: 3}
-  - {fileID: 654280790619772838, guid: 8b7fc9c6aecb95042815c8be8191547c, type: 3}
-  - {fileID: 4057148001192603659, guid: d6d56bfdfe0b6db4f80bcc9c76cc877a, type: 3}
   - {fileID: 1141692940708406369, guid: 7728c0462da0a0e40be154a34d3e1858, type: 3}
-  - {fileID: 12403855420156970, guid: b1a126548fc8ffb47aebfeac3d76b95c, type: 3}
   - {fileID: 3443881691154943669, guid: b12cb961880445e46828781a47cbb4ec, type: 3}
+  - {fileID: 377635285433233982, guid: 1482f4426b3ac164398fb3ab5497e650, type: 3}
+  - {fileID: 4521858347332047992, guid: 17b99f3d74a748c4c9a9a444d22afede, type: 3}
+  - {fileID: 4057148001192603659, guid: d6d56bfdfe0b6db4f80bcc9c76cc877a, type: 3}
+  swapTime: 0.3
+  startingTiles:
+  - tilePrefab: {fileID: 877982029463913109, guid: 37cc377765bee294089d5bab86467964,
+      type: 3}
+    x: 3
+    y: 2
+    z: 1
+  - tilePrefab: {fileID: 877982029463913109, guid: 37cc377765bee294089d5bab86467964,
+      type: 3}
+    x: 4
+    y: 2
+    z: 1
+  - tilePrefab: {fileID: 877982029463913109, guid: 37cc377765bee294089d5bab86467964,
+      type: 3}
+    x: 3
+    y: 3
+    z: 1
+  - tilePrefab: {fileID: 877982029463913109, guid: 37cc377765bee294089d5bab86467964,
+      type: 3}
+    x: 4
+    y: 3
+    z: 1
+  - tilePrefab: {fileID: 877982029463913109, guid: 37cc377765bee294089d5bab86467964,
+      type: 3}
+    x: 3
+    y: 4
+    z: 1
+  - tilePrefab: {fileID: 877982029463913109, guid: 37cc377765bee294089d5bab86467964,
+      type: 3}
+    x: 4
+    y: 4
+    z: 1
+  - tilePrefab: {fileID: 877982029463913109, guid: 37cc377765bee294089d5bab86467964,
+      type: 3}
+    x: 2
+    y: 5
+    z: 1
+  - tilePrefab: {fileID: 877982029463913109, guid: 37cc377765bee294089d5bab86467964,
+      type: 3}
+    x: 3
+    y: 5
+    z: 1
+  - tilePrefab: {fileID: 877982029463913109, guid: 37cc377765bee294089d5bab86467964,
+      type: 3}
+    x: 4
+    y: 5
+    z: 1
+  - tilePrefab: {fileID: 877982029463913109, guid: 37cc377765bee294089d5bab86467964,
+      type: 3}
+    x: 5
+    y: 5
+    z: 1
+  - tilePrefab: {fileID: 877982029463913109, guid: 37cc377765bee294089d5bab86467964,
+      type: 3}
+    x: 2
+    y: 7
+    z: 1
+  - tilePrefab: {fileID: 877982029463913109, guid: 37cc377765bee294089d5bab86467964,
+      type: 3}
+    x: 3
+    y: 7
+    z: 1
+  - tilePrefab: {fileID: 877982029463913109, guid: 37cc377765bee294089d5bab86467964,
+      type: 3}
+    x: 4
+    y: 7
+    z: 1
+  - tilePrefab: {fileID: 877982029463913109, guid: 37cc377765bee294089d5bab86467964,
+      type: 3}
+    x: 5
+    y: 7
+    z: 1
 --- !u!4 &1421813962
 Transform:
   m_ObjectHideFlags: 0

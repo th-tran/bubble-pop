@@ -10,7 +10,8 @@ public class Board : MonoBehaviour
 
     public int borderSize;
 
-    public GameObject tilePrefab;
+    public GameObject tileNormalPrefab;
+    public GameObject tileObstaclePrefab;
     public GameObject[] marblePrefabs;
 
     public float swapTime = 0.3f;
@@ -23,6 +24,17 @@ public class Board : MonoBehaviour
 
     bool m_playerInputEnabled = true;
 
+    public StartingTile[] startingTiles;
+
+    [System.Serializable]
+    public class StartingTile
+    {
+        public GameObject tilePrefab;
+        public int x;
+        public int y;
+        public int z;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,20 +45,35 @@ public class Board : MonoBehaviour
         FillBoard(10, 0.5f);
     }
 
+    void MakeTile(GameObject prefab, int x, int y, int z = 0)
+    {
+        if (prefab != null)
+        {
+            GameObject tile = Instantiate(prefab, new Vector3(x, y, z), Quaternion.identity) as GameObject;
+            tile.name = "Tile (" + x + "," + y + ")";
+            m_allTiles[x,y] = tile.GetComponent<Tile>();
+            m_allTiles[x,y].Init(x,y,this);
+            tile.transform.parent = transform;
+        }
+    }
+
     void SetupTiles()
     {
+        foreach (StartingTile sTile in startingTiles)
+        {
+            if (sTile != null)
+            {
+                MakeTile(sTile.tilePrefab, sTile.x, sTile.y, sTile.z);
+            }
+        }
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                GameObject tile = Instantiate(tilePrefab, new Vector3(i, j, 0), Quaternion.identity) as GameObject;
-
-                tile.name = "Tile (" + i + "," + j + ")";
-
-                m_allTiles[i,j] = tile.GetComponent<Tile>();
-
-                tile.transform.parent = transform;
-                m_allTiles[i,j].Init(i,j,this);
+                if (m_allTiles[i,j] == null)
+                {
+                    MakeTile(tileNormalPrefab, i, j);
+                }
             }
         }
     }
@@ -127,7 +154,7 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                if (m_allMarbles[i,j] == null)
+                if (m_allMarbles[i,j] == null && m_allTiles[i,j].tileType != TileType.Obstacle)
                 {
                     Marble marble = FillRandomAt(i, j, falseYOffset, moveTime);
 
@@ -436,7 +463,7 @@ public class Board : MonoBehaviour
 
         for (int i = 0; i < height - 1; i++)
         {
-            if (m_allMarbles[column, i] == null)
+            if (m_allMarbles[column,i] == null && m_allTiles[column,i].tileType != TileType.Obstacle)
             {
                 for (int j = i + 1; j < height; j++)
                 {
