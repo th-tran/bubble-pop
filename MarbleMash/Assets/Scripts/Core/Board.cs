@@ -373,14 +373,20 @@ public class Board : MonoBehaviour
 
     void HighlightTileOff(int x, int y)
     {
-        SpriteRenderer spriteRenderer = m_allTiles[x,y].GetComponent<SpriteRenderer>();
-        spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 0);
+        if (m_allTiles[x,y].tileType != TileType.Breakable)
+        {
+            SpriteRenderer spriteRenderer = m_allTiles[x,y].GetComponent<SpriteRenderer>();
+            spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 0);
+        }
     }
 
     void HighlightTileOn(int x, int y, Color color)
     {
-        SpriteRenderer spriteRenderer = m_allTiles[x,y].GetComponent<SpriteRenderer>();
-        spriteRenderer.color = color;
+        if (m_allTiles[x,y].tileType != TileType.Breakable)
+        {
+            SpriteRenderer spriteRenderer = m_allTiles[x,y].GetComponent<SpriteRenderer>();
+            spriteRenderer.color = color;
+        }
     }
 
 
@@ -442,6 +448,26 @@ public class Board : MonoBehaviour
             if (marble != null)
             {
                 ClearMarbleAt(marble.xIndex, marble.yIndex);
+            }
+        }
+    }
+
+    void BreakTileAt(int x, int y)
+    {
+        Tile tileToBreak = m_allTiles[x,y];
+        if (tileToBreak != null)
+        {
+            tileToBreak.BreakTile();
+        }
+    }
+
+    void BreakTileAt(List<Marble> marbles)
+    {
+        foreach (Marble marble in marbles)
+        {
+            if (marble != null)
+            {
+                BreakTileAt(marble.xIndex, marble.yIndex);
             }
         }
     }
@@ -552,6 +578,7 @@ public class Board : MonoBehaviour
         while (!isFinished)
         {
             ClearMarbleAt(marbles);
+            BreakTileAt(marbles);
 
             yield return new WaitForSeconds(0.25f);
 
