@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
 public class Marble : MonoBehaviour
 {
     public int xIndex;
     public int yIndex;
+
+    public Color color;
 
     Board m_board;
 
@@ -39,7 +42,7 @@ public class Marble : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        color = GetComponent<SpriteRenderer>().color;
     }
 
     // Update is called once per frame

@@ -401,7 +401,7 @@ public class Board : MonoBehaviour
             {
                 if (marble != null)
                 {
-                    HighlightTileOn(marble.xIndex, marble.yIndex, marble.GetComponent<SpriteRenderer>().color);
+                    HighlightTileOn(marble.xIndex, marble.yIndex, marble.color);
                 }
             }
         }
@@ -423,7 +423,7 @@ public class Board : MonoBehaviour
         {
             if (marble != null)
             {
-                HighlightTileOn(marble.xIndex, marble.yIndex, marble.GetComponent<SpriteRenderer>().color);
+                HighlightTileOn(marble.xIndex, marble.yIndex, marble.color);
             }
         }
     }
@@ -438,7 +438,7 @@ public class Board : MonoBehaviour
             Destroy(marbleToClear.gameObject);
         }
 
-        HighlightTileOff(x, y);
+        //HighlightTileOff(x, y);
     }
 
     void ClearMarbleAt(List<Marble> marbles)
@@ -448,6 +448,7 @@ public class Board : MonoBehaviour
             if (marble != null)
             {
                 ClearMarbleAt(marble.xIndex, marble.yIndex);
+                ParticleManager.Instance.ClearPieceFXAt(marble.xIndex, marble.yIndex);
             }
         }
     }
@@ -455,8 +456,9 @@ public class Board : MonoBehaviour
     void BreakTileAt(int x, int y)
     {
         Tile tileToBreak = m_allTiles[x,y];
-        if (tileToBreak != null)
+        if (tileToBreak != null && tileToBreak.tileType == TileType.Breakable)
         {
+            ParticleManager.Instance.BreakTileFXAt(tileToBreak.breakableValue, tileToBreak.xIndex, tileToBreak.yIndex);
             tileToBreak.BreakTile();
         }
     }
@@ -570,9 +572,7 @@ public class Board : MonoBehaviour
         List<Marble> movingMarbles = new List<Marble>();
         List<Marble> matches = new List<Marble>();
 
-        HighlightMarbles(marbles);
-
-        yield return new WaitForSeconds(0.25f);
+        //HighlightMarbles(marbles);
 
         bool isFinished = false;
         while (!isFinished)
@@ -597,6 +597,7 @@ public class Board : MonoBehaviour
             }
             else
             {
+                yield return new WaitForSeconds(0.2f);
                 yield return StartCoroutine(ClearAndCollapseRoutine(matches));
             }
         }
