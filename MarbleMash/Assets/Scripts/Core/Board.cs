@@ -154,6 +154,19 @@ public class Board : MonoBehaviour
                     // Drop bomb in-place
                     m_clickedTileBomb = boardBomber.DropBomb(clickedTile.xIndex, clickedTile.yIndex, swipeDirection, clickedMarbleMatches);
                     m_targetTileBomb = boardBomber.DropBomb(targetTile.xIndex, targetTile.yIndex, swipeDirection, targetMarbleMatches);
+
+                    // Change bomb color to match
+                    if (m_clickedTileBomb != null && targetMarble != null)
+                    {
+                        Bomb clickedBomb = m_clickedTileBomb.GetComponent<Bomb>();
+                        clickedBomb.ChangeColor(targetMarble);
+                    }
+
+                    if (m_targetTileBomb != null && clickedMarble != null)
+                    {
+                        Bomb targetBomb = m_targetTileBomb.GetComponent<Bomb>();
+                        targetBomb.ChangeColor(clickedMarble);
+                    }
                     List<Marble> marblesToClear = clickedMarbleMatches.Union(targetMarbleMatches).ToList();
                     ClearAndRefillBoard(marblesToClear);
                 }

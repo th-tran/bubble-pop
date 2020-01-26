@@ -132,4 +132,23 @@ public class Marble : MonoBehaviour
 
         m_isMoving = false;
     }
+
+    public void ChangeColor(Marble marbleToMatch)
+    {
+        SpriteRenderer rendererToChange = GetComponent<SpriteRenderer>();
+
+        Color colorToMatch = Color.clear;
+
+        if (marbleToMatch != null)
+        {
+            SpriteRenderer rendererToMatch = marbleToMatch.GetComponent<SpriteRenderer>();
+
+            if (rendererToMatch != null && rendererToChange != null)
+            {
+                rendererToChange.color = rendererToMatch.color;
+            }
+
+            matchValue = marbleToMatch.matchValue;
+        }
+    }
 }

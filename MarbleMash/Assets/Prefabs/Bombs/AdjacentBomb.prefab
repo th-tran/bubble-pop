@@ -4867,7 +4867,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: f8ea8c496123c4742976e647779869e4, type: 3}
-  m_Color: {r: 0.36862746, g: 0.49411768, b: 0.7960785, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -4893,5 +4893,5 @@ MonoBehaviour:
   yIndex: 0
   color: {r: 0, g: 0, b: 0, a: 1}
   interpolation: 4
-  matchValue: 1
+  matchValue: 8
   bombType: 3
