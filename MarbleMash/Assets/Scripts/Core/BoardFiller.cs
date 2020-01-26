@@ -112,6 +112,20 @@ public class BoardFiller : MonoBehaviour
         }
     }
 
+    public GameObject MakeBomb(GameObject prefab, int x, int y, int z = 0)
+    {
+        if (prefab != null && m_board.boardQuery.IsWithinBounds(x,y))
+        {
+            GameObject bomb = Instantiate(prefab, new Vector3(x, y, z), Quaternion.identity) as GameObject;
+            bomb.GetComponent<Bomb>().Init(m_board);
+            bomb.GetComponent<Bomb>().SetCoordinates(x,y);
+            bomb.transform.parent = transform;
+            return bomb;
+        }
+
+        return null;
+    }
+
     public void PlaceMarble(Marble marble, int x, int y)
     {
         if (m_board == null)

@@ -13,6 +13,7 @@ public class StartingObject
     public int z;
 }
 
+[RequireComponent(typeof(BoardBomber))]
 [RequireComponent(typeof(BoardClearer))]
 [RequireComponent(typeof(BoardCollapser))]
 [RequireComponent(typeof(BoardFiller))]
@@ -37,6 +38,14 @@ public class Board : MonoBehaviour
     public GameObject tileObstaclePrefab;
     // Array of Marble Prefabs
     public GameObject[] marblePrefabs;
+
+    // Prefabs representing Bombs
+    public GameObject adjacentBombPrefab;
+    public GameObject columnBombPrefab;
+    public GameObject rowBombPrefab;
+
+    GameObject m_clickedTileBomb;
+    GameObject m_targetTileBomb;
 
     // The time required to swap Marbles between the target and clicked Tile
     float m_swapTime = 0.5f;
@@ -67,6 +76,7 @@ public class Board : MonoBehaviour
     public float fillMoveTime = 0.5f;
 
     // References to Board components
+    public BoardBomber boardBomber;
     public BoardClearer boardClearer;
     public BoardCollapser boardCollapser;
     public BoardFiller boardFiller;
@@ -79,6 +89,7 @@ public class Board : MonoBehaviour
 
     void Awake()
     {
+        boardBomber = GetComponent<BoardBomber>();
         boardClearer = GetComponent<BoardClearer>();
         boardCollapser = GetComponent<BoardCollapser>();
         boardFiller = GetComponent<BoardFiller>();
@@ -139,6 +150,10 @@ public class Board : MonoBehaviour
                 else
                 {
                     // Clear matches and refill the Board
+                    Vector2 swipeDirection = new Vector2(targetTile.xIndex - clickedTile.xIndex, targetTile.yIndex - clickedTile.yIndex);
+                    // Drop bomb in-place
+                    m_clickedTileBomb = boardBomber.DropBomb(clickedTile.xIndex, clickedTile.yIndex, swipeDirection, clickedMarbleMatches);
+                    m_targetTileBomb = boardBomber.DropBomb(targetTile.xIndex, targetTile.yIndex, swipeDirection, targetMarbleMatches);
                     List<Marble> marblesToClear = clickedMarbleMatches.Union(targetMarbleMatches).ToList();
                     ClearAndRefillBoard(marblesToClear);
                 }
@@ -193,6 +208,19 @@ public class Board : MonoBehaviour
             boardClearer.ClearMarbleAt(marbles);
             // Break any Tiles under the cleared Marbles
             boardTiles.BreakTileAt(marbles);
+
+            // Activate any generated bombs
+            if (m_clickedTileBomb != null)
+            {
+                boardBomber.ActivateBomb(m_clickedTileBomb);
+                m_clickedTileBomb = null;
+            }
+
+            if (m_targetTileBomb != null)
+            {
+                boardBomber.ActivateBomb(m_targetTileBomb);
+                m_targetTileBomb = null;
+            }
 
             yield return new WaitForSeconds(m_delay);
 

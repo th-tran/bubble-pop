@@ -141,6 +141,39 @@ public class BoardQuery : MonoBehaviour
         return allMarblesToClear;
     }
 
+    public bool IsCornerMatch(List<Marble> marbles)
+    {
+        bool vertical = false;
+        bool horizontal = false;
+        int xStart = -1;
+        int yStart = -1;
+
+        foreach (Marble marble in marbles)
+        {
+            if (marble != null)
+            {
+                if (xStart == -1 || yStart == -1)
+                {
+                    xStart = marble.xIndex;
+                    yStart = marble.yIndex;
+                    continue;
+                }
+
+                if (marble.xIndex != xStart && marble.yIndex == yStart)
+                {
+                    horizontal = true;
+                }
+
+                if (marble.xIndex == xStart && marble.yIndex != yStart)
+                {
+                    vertical = true;
+                }
+            }
+        }
+
+        return (horizontal && vertical);
+    }
+
     public bool IsWithinBounds(int x, int y)
     {
         if (m_board == null)

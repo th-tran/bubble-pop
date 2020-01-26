@@ -435,6 +435,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1421813962}
   - component: {fileID: 1421813961}
+  - component: {fileID: 1421813972}
   - component: {fileID: 1421813971}
   - component: {fileID: 1421813970}
   - component: {fileID: 1421813969}
@@ -476,6 +477,12 @@ MonoBehaviour:
   - {fileID: 377635285433233982, guid: 1482f4426b3ac164398fb3ab5497e650, type: 3}
   - {fileID: 4521858347332047992, guid: 17b99f3d74a748c4c9a9a444d22afede, type: 3}
   - {fileID: 4057148001192603659, guid: d6d56bfdfe0b6db4f80bcc9c76cc877a, type: 3}
+  adjacentBombPrefab: {fileID: 7876885213277011741, guid: fad656e4f12f5214c9838828403a522f,
+    type: 3}
+  columnBombPrefab: {fileID: 4125681185513651719, guid: cbb5d8f930dad8a4cba14517e4d24a62,
+    type: 3}
+  rowBombPrefab: {fileID: 234256118283767026, guid: cf796d59b5198304c9a7a27c2500a8e1,
+    type: 3}
   clickedTile: {fileID: 0}
   targetTile: {fileID: 0}
   playerInputEnabled: 1
@@ -537,6 +544,7 @@ MonoBehaviour:
     z: 0
   fillYOffset: 10
   fillMoveTime: 0.5
+  boardBomber: {fileID: 0}
   boardClearer: {fileID: 0}
   boardCollapser: {fileID: 0}
   boardFiller: {fileID: 0}
@@ -666,6 +674,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: edaa0d330817bcb43be98c39ef23a2e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1421813972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421813960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceafdf976f9bd8945bc2777c18aaaf85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1475528628
