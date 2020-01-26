@@ -37,14 +37,21 @@ public class BoardClearer : MonoBehaviour
         //HighlightTileOff(x,y);
     }
 
-    public void ClearMarbleAt(List<Marble> marbles)
+    public void ClearMarbleAt(List<Marble> marbles, List<Marble> bombedMarbles)
     {
         foreach (Marble marble in marbles)
         {
             if (marble != null)
             {
                 ClearMarbleAt(marble.xIndex, marble.yIndex);
-                ParticleManager.Instance.ClearMarbleFXAt(marble.xIndex, marble.yIndex);
+                if (bombedMarbles.Contains(marble))
+                {
+                    ParticleManager.Instance.BombFXAt(marble.xIndex, marble.yIndex);
+                }
+                else
+                {
+                    ParticleManager.Instance.ClearMarbleFXAt(marble.xIndex, marble.yIndex);
+                }
             }
         }
     }

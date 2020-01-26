@@ -214,19 +214,20 @@ public class Board : MonoBehaviour
         {
             // Trigger all bombs
             int oldCount;
+            List<Marble> bombedMarbles = new List<Marble>();
             do
             {
                 // Keep track of number of Marbles affected before bomb triggers
                 oldCount = marbles.Count;
                 // Find Marbles affected by bombs...
-                List<Marble> bombedMarbles = boardQuery.GetBombedMarbles(marbles);
+                bombedMarbles = boardQuery.GetBombedMarbles(marbles);
                 // ...and add to list of Marbles to clear
                 marbles = marbles.Union(bombedMarbles).ToList();
             }
             while (oldCount < marbles.Count);
 
             // Clear the Marbles
-            boardClearer.ClearMarbleAt(marbles);
+            boardClearer.ClearMarbleAt(marbles, bombedMarbles);
             // Break any Tiles under the cleared Marbles
             boardTiles.BreakTileAt(marbles);
 
