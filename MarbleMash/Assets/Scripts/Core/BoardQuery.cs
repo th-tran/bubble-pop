@@ -54,6 +54,93 @@ public class BoardQuery : MonoBehaviour
         return columns;
     }
 
+    public List<Marble> GetRowMarbles(int row)
+    {
+        List<Marble> marbles = new List<Marble>();
+
+        for (int i = 0; i < m_board.width; i++)
+        {
+            if (m_board.allMarbles[i, row] != null)
+            {
+                marbles.Add(m_board.allMarbles[i, row]);
+            }
+        }
+
+        return marbles;
+    }
+
+    public List<Marble> GetColumnMarbles(int column)
+    {
+        List<Marble> marbles = new List<Marble>();
+
+        for (int i = 0; i < m_board.height; i++)
+        {
+            if (m_board.allMarbles[column, i] != null)
+            {
+                marbles.Add(m_board.allMarbles[column, i]);
+            }
+        }
+
+        return marbles;
+    }
+
+    public List<Marble> GetAdjacentMarbles(int x, int y, int offset = 1)
+    {
+        List<Marble> marbles = new List<Marble>();
+
+        for (int i = x - offset; i <= x + offset; i++)
+        {
+            for (int j = y - offset; j <= y + offset; j++)
+            {
+                if (IsWithinBounds(i,j))
+                {
+                    marbles.Add(m_board.allMarbles[i, j]);
+                }
+            }
+        }
+
+        return marbles;
+    }
+
+    public List<Marble> GetBombedMarbles(List<Marble> marbles)
+    {
+        List<Marble> allMarblesToClear = new List<Marble>();
+
+        foreach (Marble marble in marbles)
+        {
+            if (marble != null)
+            {
+                List<Marble> marblesToClear = new List<Marble>();
+
+                Bomb bomb = marble.GetComponent<Bomb>();
+
+                if (bomb != null)
+                {
+                    switch (bomb.bombType)
+                    {
+                        case BombType.Column:
+                            marblesToClear = GetColumnMarbles(bomb.xIndex);
+                            break;
+                        case BombType.Row:
+                            marblesToClear = GetRowMarbles(bomb.yIndex);
+                            break;
+                        case BombType.Adjacent:
+                            marblesToClear = GetAdjacentMarbles(bomb.xIndex, bomb.yIndex, 1);
+                            break;
+                        case BombType.Color:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                allMarblesToClear = allMarblesToClear.Union(marblesToClear).ToList();
+            }
+        }
+
+        return allMarblesToClear;
+    }
+
     public bool IsWithinBounds(int x, int y)
     {
         if (m_board == null)

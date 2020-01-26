@@ -184,6 +184,11 @@ public class Board : MonoBehaviour
         bool isFinished = false;
         while (!isFinished)
         {
+            // Find Marbles affected by bombs...
+            List<Marble> bombedMarbles = boardQuery.GetBombedMarbles(marbles);
+            // ...and add to list of Marbles to clear
+            marbles = marbles.Union(bombedMarbles).ToList();
+
             // Clear the Marbles
             boardClearer.ClearMarbleAt(marbles);
             // Break any Tiles under the cleared Marbles

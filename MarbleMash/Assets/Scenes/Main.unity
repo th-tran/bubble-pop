@@ -520,7 +520,21 @@ MonoBehaviour:
     x: 7
     y: 2
     z: 0
-  startingMarbles: []
+  startingMarbles:
+  - prefab: {fileID: 4521858347332047992, guid: 17b99f3d74a748c4c9a9a444d22afede,
+      type: 3}
+    x: 0
+    y: 0
+    z: 0
+  - prefab: {fileID: 4521858347332047992, guid: 17b99f3d74a748c4c9a9a444d22afede,
+      type: 3}
+    x: 0
+    y: 1
+    z: 0
+  - prefab: {fileID: 234256118283767026, guid: cf796d59b5198304c9a7a27c2500a8e1, type: 3}
+    x: 1
+    y: 2
+    z: 0
   fillYOffset: 10
   fillMoveTime: 0.5
   boardClearer: {fileID: 0}
