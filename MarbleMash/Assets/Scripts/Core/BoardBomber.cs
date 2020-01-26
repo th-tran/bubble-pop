@@ -63,7 +63,7 @@ public class BoardBomber : MonoBehaviour
 
         if (m_board.boardQuery.IsWithinBounds(x,y))
         {
-            m_board.allMarbles[x,y] = bomb.GetComponent<Marble>();
+            m_board.allMarbles[x,y] = bomb.GetComponent<Bomb>();
         }
     }
 }

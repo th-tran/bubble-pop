@@ -58,7 +58,6 @@ public class BoardMatcher : MonoBehaviour
             {
                 break;
             }
-
             else
             {
                 // If it matches then add it our running list of Marbles

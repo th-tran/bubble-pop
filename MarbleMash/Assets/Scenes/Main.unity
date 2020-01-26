@@ -487,6 +487,12 @@ MonoBehaviour:
     type: 3}
   colorBombPrefab: {fileID: 642297590524246959, guid: d72f2bf7feb3a4f4fa051cc6aa53ce06,
     type: 3}
+  maxBlockers: 3
+  blockerCount: 0
+  chanceForBlocker: 0.1
+  blockerPrefabs:
+  - {fileID: 6568805611230536807, guid: 28d32d7eec2492d43b1f165b787c0384, type: 3}
+  - {fileID: 4698293573969559482, guid: c65ee199001f72945a4a0019042a290b, type: 3}
   clickedTile: {fileID: 0}
   targetTile: {fileID: 0}
   playerInputEnabled: 1

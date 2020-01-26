@@ -48,6 +48,12 @@ public class Board : MonoBehaviour
     GameObject m_clickedTileBomb;
     GameObject m_targetTileBomb;
 
+    public int maxBlockers = 3;
+    public int blockerCount = 0;
+    [Range(0,1)]
+    public float chanceForBlocker = 0.1f;
+    public GameObject[] blockerPrefabs;
+
     // The time required to swap Marbles between the target and clicked Tile
     float m_swapTime = 0.5f;
     // The base delay between events
@@ -111,6 +117,9 @@ public class Board : MonoBehaviour
         allMarbles = new Marble[width,height];
 
         boardSetup.SetupBoard();
+
+        List<Blocker> startingBlockers = boardQuery.FindAllBlockers();
+        blockerCount = startingBlockers.Count;
     }
 
     public void SwitchTiles(Tile clickedTile, Tile targetTile)
@@ -230,7 +239,7 @@ public class Board : MonoBehaviour
         playerInputEnabled = true;
     }
 
-    IEnumerator ClearAndCollapseRoutine(List<Marble> marbles)
+    IEnumerator ClearAndCollapseRoutine(List<Marble> marblesToClear)
     {
         // List of Marbles to move
         List<Marble> movingMarbles = new List<Marble>();
@@ -248,18 +257,28 @@ public class Board : MonoBehaviour
             do
             {
                 // Keep track of number of Marbles affected before bomb triggers
-                oldCount = marbles.Count;
+                oldCount = marblesToClear.Count;
                 // Find Marbles affected by bombs...
-                bombedMarbles = boardQuery.GetBombedMarbles(marbles);
+                bombedMarbles = boardQuery.GetBombedMarbles(marblesToClear);
                 // ...and add to list of Marbles to clear
-                marbles = marbles.Union(bombedMarbles).ToList();
+                marblesToClear = marblesToClear.Union(bombedMarbles).ToList();
             }
-            while (oldCount < marbles.Count);
+            while (oldCount < marblesToClear.Count);
+
+            // Add any heavy blockers that hit bottom of Board to list of marbles to clear
+            List<Blocker> bottomBlockers = boardQuery.FindBlockersAt(0, true);
+            // Get list of blockers to be cleared
+            List<Blocker> allBlockers = boardQuery.FindAllBlockers();
+            List<Blocker> blockersToClear = allBlockers.Intersect(marblesToClear).Cast<Blocker>().ToList();
+            blockersToClear = blockersToClear.Union(bottomBlockers).ToList();
+            blockerCount -= blockersToClear.Count;
+
+            marblesToClear = marblesToClear.Union(blockersToClear).ToList();
 
             // Clear the Marbles
-            boardClearer.ClearMarbleAt(marbles, bombedMarbles);
+            boardClearer.ClearMarbleAt(marblesToClear, bombedMarbles);
             // Break any Tiles under the cleared Marbles
-            boardTiles.BreakTileAt(marbles);
+            boardTiles.BreakTileAt(marblesToClear);
 
             // Activate any previously generated bombs
             if (m_clickedTileBomb != null)
@@ -277,7 +296,7 @@ public class Board : MonoBehaviour
             yield return new WaitForSeconds(m_delay);
 
             // Collapse any columns with empty spaces and keep track of what Marbles moved as a result
-            movingMarbles = boardCollapser.CollapseColumn(marbles);
+            movingMarbles = boardCollapser.CollapseColumn(marblesToClear);
 
             // Wait while these Marbles fill in the gaps
             while (!boardQuery.IsCollapsed(movingMarbles))
@@ -287,6 +306,9 @@ public class Board : MonoBehaviour
 
             // Find any matches that form from collapsing
             matches = boardMatcher.FindMatchesAt(movingMarbles);
+            // Check if any blockers fell to bottom
+            blockersToClear = boardQuery.FindBlockersAt(0, true);
+            matches = matches.Union(blockersToClear).ToList();
 
             // If no matches are formed from the collapse, then finish
             if (matches.Count == 0)

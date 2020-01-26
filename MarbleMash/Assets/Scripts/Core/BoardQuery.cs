@@ -39,6 +39,16 @@ public class BoardQuery : MonoBehaviour
         return GetRandomObject(m_board.marblePrefabs);
     }
 
+    public GameObject GetRandomBlocker()
+    {
+        if (m_board == null)
+        {
+            return null;
+        }
+
+        return GetRandomObject(m_board.blockerPrefabs);
+    }
+
     public List<int> GetColumns(List<Marble> marbles)
     {
         List<int> columns = new List<int>();
@@ -135,6 +145,7 @@ public class BoardQuery : MonoBehaviour
                 }
 
                 allMarblesToClear = allMarblesToClear.Union(marblesToClear).ToList();
+                allMarblesToClear = RemoveBlockers(allMarblesToClear);
             }
         }
 
@@ -232,5 +243,67 @@ public class BoardQuery : MonoBehaviour
         // Return whether matches were found
         return (leftMatches.Count > 0 || downwardMatches.Count > 0);
 
+    }
+
+    public List<Blocker> FindBlockersAt(int row, bool clearedAtBottomOnly = false)
+    {
+        List<Blocker> foundBlockers = new List<Blocker>();
+
+        for (int i = 0; i < m_board.width; i++)
+        {
+            if (m_board.allMarbles[i,row] != null)
+            {
+                Blocker blockerComponent = m_board.allMarbles[i,row].GetComponent<Blocker>();
+
+                if (blockerComponent != null)
+                {
+                    if (!clearedAtBottomOnly || (clearedAtBottomOnly && blockerComponent.clearedAtBottom))
+                    {
+                        foundBlockers.Add(blockerComponent);
+                    }
+                }
+            }
+        }
+
+        return foundBlockers;
+    }
+
+    public List<Blocker> FindAllBlockers()
+    {
+        List<Blocker> foundBlockers = new List<Blocker>();
+
+        for (int i = 0; i < m_board.height; i++)
+        {
+            List<Blocker> blockerRow = FindBlockersAt(i);
+            foundBlockers = foundBlockers.Union(blockerRow).ToList();
+        }
+
+        return foundBlockers;
+    }
+
+    public bool CanAddBlocker()
+    {
+        return (Random.Range(0f, 1f) <= m_board.chanceForBlocker
+                && m_board.blockerPrefabs.Length > 0
+                && m_board.blockerCount < m_board.maxBlockers);
+    }
+
+    public List<Marble> RemoveBlockers(List<Marble> bombedMarbles)
+    {
+        List<Blocker> blockers = FindAllBlockers();
+        List<Marble> marblesToRemove = new List<Marble>();
+
+        foreach (Blocker blocker in blockers)
+        {
+            if (blocker != null)
+            {
+                if (!blocker.clearedByBomb)
+                {
+                    marblesToRemove.Add(blocker);
+                }
+            }
+        }
+
+        return bombedMarbles.Except(marblesToRemove).ToList();
     }
 }

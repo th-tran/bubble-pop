@@ -29,6 +29,23 @@ public class BoardFiller : MonoBehaviour
         return null;
     }
 
+    public Blocker FillRandomBlockerAt(int x, int y, int falseYOffset = 0, float moveTime = 0.1f)
+    {
+        if (m_board == null)
+        {
+            return null;
+        }
+
+        if (m_board.boardQuery.IsWithinBounds(x, y))
+        {
+            GameObject randomBlocker = Instantiate(m_board.boardQuery.GetRandomBlocker(), Vector3.zero, Quaternion.identity) as GameObject;
+            MakeMarble(randomBlocker, x, y, falseYOffset, moveTime);
+            return randomBlocker.GetComponent<Blocker>();
+        }
+
+        return null;
+    }
+
     public void FillBoard(int falseYOffset = 0, float moveTime = 0.1f)
     {
         int maxInterations = 100;
@@ -42,22 +59,30 @@ public class BoardFiller : MonoBehaviour
                 // If the space is unoccupied and does not contain an Obstacle tile...
                 if (m_board.allMarbles[i, j] == null && m_board.allTiles[i, j].tileType != TileType.Obstacle)
                 {
-                    // ...fill in a Marble
-                    FillRandomMarbleAt(i, j, falseYOffset, moveTime);
-                    iterations = 0;
-
-                    // If we form a match while filling in the Marble...
-                    while (m_board.boardQuery.HasMatchOnFill(i, j))
+                    if (j == m_board.height - 1 && m_board.boardQuery.CanAddBlocker())
                     {
-                        // ...remove the Marble and try again
-                        m_board.boardClearer.ClearMarbleAt(i, j);
+                        FillRandomBlockerAt(i, j, falseYOffset, moveTime);
+                        m_board.blockerCount++;
+                    }
+                    else
+                    {
+                        // ...fill in a Marble
                         FillRandomMarbleAt(i, j, falseYOffset, moveTime);
+                        iterations = 0;
 
-                        // ...check to prevent infinite loop
-                        iterations++;
-                        if (iterations >= maxInterations)
+                        // If we form a match while filling in the Marble...
+                        while (m_board.boardQuery.HasMatchOnFill(i, j))
                         {
-                            break;
+                            // ...remove the Marble and try again
+                            m_board.boardClearer.ClearMarbleAt(i, j);
+                            FillRandomMarbleAt(i, j, falseYOffset, moveTime);
+
+                            // ...check to prevent infinite loop
+                            iterations++;
+                            if (iterations >= maxInterations)
+                            {
+                                break;
+                            }
                         }
                     }
                 }
