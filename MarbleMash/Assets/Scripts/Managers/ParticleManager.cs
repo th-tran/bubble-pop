@@ -24,7 +24,7 @@ public class ParticleManager : MonoBehaviour
         }
     }
 
-    public void ClearPieceFXAt(int x, int y, int z = 0)
+    public void ClearMarbleFXAt(int x, int y, int z = 0)
     {
         if (clearFXPrefab != null)
         {

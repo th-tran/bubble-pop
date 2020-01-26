@@ -2,6 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum MatchValue
+{
+    Yellow,
+    Blue,
+    Magenta,
+    Indigo,
+    Green,
+    Teal,
+    Red,
+    Cyan,
+    Wild,
+    None
+}
+
 [RequireComponent(typeof(SpriteRenderer))]
 public class Marble : MonoBehaviour
 {
@@ -14,6 +28,8 @@ public class Marble : MonoBehaviour
 
     bool m_isMoving = false;
 
+    public InterpolationType interpolation = InterpolationType.SmootherStep;
+
     public enum InterpolationType
     {
         Linear,
@@ -23,20 +39,6 @@ public class Marble : MonoBehaviour
         SmootherStep
     };
 
-    public enum MatchValue
-    {
-        Yellow,
-        Blue,
-        Magenta,
-        Indigo,
-        Green,
-        Teal,
-        Red,
-        Cyan,
-        Wild
-    }
-
-    public InterpolationType interpolation = InterpolationType.SmootherStep;
     public MatchValue matchValue;
 
     // Start is called before the first frame update
@@ -93,7 +95,7 @@ public class Marble : MonoBehaviour
                 reachedDestination = true;
                 if (m_board != null)
                 {
-                    m_board.PlaceMarble(this, (int) destination.x, (int) destination.y);
+                    m_board.boardFiller.PlaceMarble(this, (int) destination.x, (int) destination.y);
                 }
                 break;
             }
