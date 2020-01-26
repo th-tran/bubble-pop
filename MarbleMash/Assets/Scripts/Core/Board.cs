@@ -212,17 +212,25 @@ public class Board : MonoBehaviour
         bool isFinished = false;
         while (!isFinished)
         {
-            // Find Marbles affected by bombs...
-            List<Marble> bombedMarbles = boardQuery.GetBombedMarbles(marbles);
-            // ...and add to list of Marbles to clear
-            marbles = marbles.Union(bombedMarbles).ToList();
+            // Trigger all bombs
+            int oldCount;
+            do
+            {
+                // Keep track of number of Marbles affected before bomb triggers
+                oldCount = marbles.Count;
+                // Find Marbles affected by bombs...
+                List<Marble> bombedMarbles = boardQuery.GetBombedMarbles(marbles);
+                // ...and add to list of Marbles to clear
+                marbles = marbles.Union(bombedMarbles).ToList();
+            }
+            while (oldCount < marbles.Count);
 
             // Clear the Marbles
             boardClearer.ClearMarbleAt(marbles);
             // Break any Tiles under the cleared Marbles
             boardTiles.BreakTileAt(marbles);
 
-            // Activate any generated bombs
+            // Activate any previously generated bombs
             if (m_clickedTileBomb != null)
             {
                 boardBomber.ActivateBomb(m_clickedTileBomb);
