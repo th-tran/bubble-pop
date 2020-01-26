@@ -485,6 +485,8 @@ MonoBehaviour:
     type: 3}
   rowBombPrefab: {fileID: 234256118283767026, guid: cf796d59b5198304c9a7a27c2500a8e1,
     type: 3}
+  colorBombPrefab: {fileID: 642297590524246959, guid: d72f2bf7feb3a4f4fa051cc6aa53ce06,
+    type: 3}
   clickedTile: {fileID: 0}
   targetTile: {fileID: 0}
   playerInputEnabled: 1

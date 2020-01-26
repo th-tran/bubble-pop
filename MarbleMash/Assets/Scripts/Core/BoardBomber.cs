@@ -21,29 +21,34 @@ public class BoardBomber : MonoBehaviour
         {
             if (m_board.boardQuery.IsCornerMatch(marbles))
             {
-                // Drop an adjacent bomb
+                // Adjacent bomb
                 if (m_board.adjacentBombPrefab != null)
                 {
                     bomb = m_board.boardFiller.MakeBomb(m_board.adjacentBombPrefab, x, y);
                 }
             }
+            else if (marbles.Count >= 5)
+            {
+                // Color bomb
+                if (m_board.colorBombPrefab != null)
+                {
+                    bomb = m_board.boardFiller.MakeBomb(m_board.colorBombPrefab, x, y);
+                }
+            }
+            else if (swapDirection.x != 0)
+            {
+                // Row bomb
+                if (m_board.rowBombPrefab != null)
+                {
+                    bomb = m_board.boardFiller.MakeBomb(m_board.rowBombPrefab, x, y);
+                }
+            }
             else
             {
-                if (swapDirection.x != 0)
+                // Column bomb
+                if (m_board.columnBombPrefab != null)
                 {
-                    // Drop a row bomb
-                    if (m_board.rowBombPrefab != null)
-                    {
-                        bomb = m_board.boardFiller.MakeBomb(m_board.rowBombPrefab, x, y);
-                    }
-                }
-                else
-                {
-                    // Drop a column bomb
-                    if (m_board.columnBombPrefab != null)
-                    {
-                        bomb = m_board.boardFiller.MakeBomb(m_board.columnBombPrefab, x, y);
-                    }
+                    bomb = m_board.boardFiller.MakeBomb(m_board.columnBombPrefab, x, y);
                 }
             }
         }

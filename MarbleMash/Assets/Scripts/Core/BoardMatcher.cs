@@ -137,4 +137,25 @@ public class BoardMatcher : MonoBehaviour
 
         return combinedMatches;
     }
+
+    public List<Marble> FindAllMatchValue(MatchValue matchValue)
+    {
+        List<Marble> foundMarbles = new List<Marble>();
+
+        for (int i = 0; i < m_board.width; i++)
+        {
+            for (int j = 0; j < m_board.height; j++)
+            {
+                if (m_board.allMarbles[i,j] != null)
+                {
+                    if (m_board.allMarbles[i,j].matchValue == matchValue)
+                    {
+                        foundMarbles.Add(m_board.allMarbles[i,j]);
+                    }
+                }
+            }
+        }
+
+        return foundMarbles;
+    }
 }

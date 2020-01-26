@@ -43,6 +43,7 @@ public class Board : MonoBehaviour
     public GameObject adjacentBombPrefab;
     public GameObject columnBombPrefab;
     public GameObject rowBombPrefab;
+    public GameObject colorBombPrefab;
 
     GameObject m_clickedTileBomb;
     GameObject m_targetTileBomb;
@@ -139,8 +140,31 @@ public class Board : MonoBehaviour
                 List<Marble> clickedMarbleMatches = boardMatcher.FindMatchesAt(clickedTile.xIndex, clickedTile.yIndex);
                 List<Marble> targetMarbleMatches = boardMatcher.FindMatchesAt(targetTile.xIndex, targetTile.yIndex);
 
+                // Check if color bomb was triggered, and if so get the list of corresponding marbles
+                List<Marble> colorMatches = new List<Marble>();
+                if (boardQuery.IsColorBomb(clickedMarble) && !boardQuery.IsColorBomb(targetMarble))
+                {
+                    clickedMarble.matchValue = targetMarble.matchValue;
+                    colorMatches = boardMatcher.FindAllMatchValue(clickedMarble.matchValue);
+                }
+                else if (!boardQuery.IsColorBomb(clickedMarble) && boardQuery.IsColorBomb(targetMarble))
+                {
+                    targetMarble.matchValue = clickedMarble.matchValue;
+                    colorMatches = boardMatcher.FindAllMatchValue(targetMarble.matchValue);
+                }
+                else if (boardQuery.IsColorBomb(clickedMarble) && boardQuery.IsColorBomb(targetMarble))
+                {
+                    foreach(Marble marble in allMarbles)
+                    {
+                        if (!colorMatches.Contains(marble))
+                        {
+                            colorMatches.Add(marble);
+                        }
+                    }
+                }
+
                 // If no matches are found, then swap the Marbles back
-                if (clickedMarbleMatches.Count == 0 && targetMarbleMatches.Count == 0)
+                if (clickedMarbleMatches.Count == 0 && targetMarbleMatches.Count == 0 && colorMatches.Count == 0)
                 {
                     clickedMarble.Move(clickedTile.xIndex, clickedTile.yIndex, m_swapTime);
                     targetMarble.Move(targetTile.xIndex, targetTile.yIndex, m_swapTime);
@@ -159,15 +183,21 @@ public class Board : MonoBehaviour
                     if (m_clickedTileBomb != null && targetMarble != null)
                     {
                         Bomb clickedBomb = m_clickedTileBomb.GetComponent<Bomb>();
-                        clickedBomb.ChangeColor(targetMarble);
+                        if (!boardQuery.IsColorBomb(clickedBomb))
+                        {
+                            clickedBomb.ChangeColor(targetMarble);
+                        }
                     }
 
                     if (m_targetTileBomb != null && clickedMarble != null)
                     {
                         Bomb targetBomb = m_targetTileBomb.GetComponent<Bomb>();
-                        targetBomb.ChangeColor(clickedMarble);
+                        if (!boardQuery.IsColorBomb(targetBomb))
+                        {
+                            targetBomb.ChangeColor(clickedMarble);
+                        }
                     }
-                    List<Marble> marblesToClear = clickedMarbleMatches.Union(targetMarbleMatches).ToList();
+                    List<Marble> marblesToClear = clickedMarbleMatches.Union(targetMarbleMatches).ToList().Union(colorMatches).ToList();
                     ClearAndRefillBoard(marblesToClear);
                 }
             }

@@ -141,6 +141,18 @@ public class BoardQuery : MonoBehaviour
         return allMarblesToClear;
     }
 
+    public bool IsColorBomb(Marble marble)
+    {
+        Bomb bomb = marble.GetComponent<Bomb>();
+
+        if (bomb != null)
+        {
+            return (bomb.bombType == BombType.Color);
+        }
+
+        return false;
+    }
+
     public bool IsCornerMatch(List<Marble> marbles)
     {
         bool vertical = false;
