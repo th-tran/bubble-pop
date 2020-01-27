@@ -4,14 +4,13 @@ using UnityEngine;
 
 public enum MatchValue
 {
-    Yellow,
-    Blue,
-    Magenta,
-    Indigo,
-    Green,
-    Teal,
     Red,
-    Cyan,
+    Orange,
+    Yellow,
+    Green,
+    Blue,
+    Teal,
+    Purple,
     Wild,
     None
 }
