@@ -30,6 +30,10 @@ public class BoardSetup : MonoBehaviour
 
         // Fill empty Tiles of the Board with Bubbles
         m_board.boardFiller.FillBoard(m_board.fillYOffset, m_board.fillMoveTime);
+
+        // Keep track of number of current blockers on board
+        List<Blocker> startingBlockers = m_board.boardQuery.FindAllBlockers();
+        m_board.blockerCount = startingBlockers.Count;
     }
 
     public void SetupTiles()

@@ -118,11 +118,6 @@ public class Board : MonoBehaviour
         allTiles = new Tile[width,height];
         // initialize array of Bubbles
         allBubbles = new Bubble[width,height];
-
-        boardSetup.SetupBoard();
-
-        List<Blocker> startingBlockers = boardQuery.FindAllBlockers();
-        blockerCount = startingBlockers.Count;
     }
 
     public void SwitchTiles(Tile clickedTile, Tile targetTile)
@@ -185,6 +180,10 @@ public class Board : MonoBehaviour
                 }
                 else
                 {
+                    if (GameManager.Instance != null)
+                    {
+                        GameManager.Instance.DecrementMoves();
+                    }
                     // Clear matches and refill the Board
                     Vector2 swipeDirection = new Vector2(targetTile.xIndex - clickedTile.xIndex, targetTile.yIndex - clickedTile.yIndex);
                     // Drop bomb in-place
