@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 3436659979539608910}
   - component: {fileID: 3436659979539608909}
   m_Layer: 5
-  m_Name: StartText
+  m_Name: ButtonText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -241,6 +241,8 @@ GameObject:
   - component: {fileID: 3436659979834937071}
   - component: {fileID: 3436659979834937070}
   - component: {fileID: 3436659979834937069}
+  - component: {fileID: 126597018}
+  - component: {fileID: 126597017}
   m_Layer: 5
   m_Name: MessageWindow
   m_TagString: Untagged
@@ -321,6 +323,37 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 20, y: -20}
   m_UseGraphicAlpha: 1
+--- !u!114 &126597018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3436659979834937059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c19d88514594c42b07d3b1f6cb4791, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startPosition: {x: 0, y: 1500, z: 0}
+  onscreenPosition: {x: 0, y: 0, z: 0}
+  endPosition: {x: 0, y: -1500, z: 0}
+  timeToMove: 1
+--- !u!114 &126597017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3436659979834937059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2dcba98d9f3d0c469a63aaaaae12291, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  messageIcon: {fileID: 3436659979575227603}
+  messageText: {fileID: 3436659981129375940}
+  buttonText: {fileID: 3436659979539608909}
 --- !u!1 &3436659979961078509
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,7 +367,7 @@ GameObject:
   - component: {fileID: 3436659979961078504}
   - component: {fileID: 3436659979961078511}
   m_Layer: 5
-  m_Name: StartButton
+  m_Name: Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
