@@ -44,13 +44,24 @@ public class BoardClearer : MonoBehaviour
             if (bubble != null)
             {
                 ClearBubbleAt(bubble.xIndex, bubble.yIndex);
-                if (bombedBubbles.Contains(bubble))
+
+                int bonus = 0;
+                if (bubbles.Count >= 4)
                 {
-                    ParticleManager.Instance.BombFXAt(bubble.xIndex, bubble.yIndex);
+                    bonus = 20;
                 }
-                else
+                bubble.ScorePoints(m_board.scoreMultiplier, bonus);
+
+                if (ParticleManager.Instance != null)
                 {
-                    ParticleManager.Instance.ClearBubbleFXAt(bubble.xIndex, bubble.yIndex);
+                    if (bombedBubbles.Contains(bubble))
+                    {
+                        ParticleManager.Instance.BombFXAt(bubble.xIndex, bubble.yIndex);
+                    }
+                    else
+                    {
+                        ParticleManager.Instance.ClearBubbleFXAt(bubble.xIndex, bubble.yIndex);
+                    }
                 }
             }
         }

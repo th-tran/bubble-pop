@@ -83,6 +83,8 @@ public class Board : MonoBehaviour
     public float fillMoveTime = 0.5f;
     public float collapseMoveTime = 0.1f;
 
+    public int scoreMultiplier = 0;
+
     // References to Board components
     public BoardBomber boardBomber;
     public BoardClearer boardClearer;
@@ -228,6 +230,7 @@ public class Board : MonoBehaviour
         List<Bubble> matches = bubbles;
         do
         {
+            scoreMultiplier = 1;
             // Run the coroutine to clear the Board, collapse any columns to fill in the spaces
             // and refill empty spaces from collapsing
             yield return StartCoroutine(ClearAndProcessRoutine(matches));
@@ -325,6 +328,7 @@ public class Board : MonoBehaviour
             // Otherwise, repeat this process again
             else
             {
+                scoreMultiplier++;
                 yield return new WaitForSeconds(m_delay);
                 yield return StartCoroutine(ClearAndProcessRoutine(matches));
             }

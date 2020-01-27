@@ -40,6 +40,8 @@ public class Bubble : MonoBehaviour
 
     public MatchValue matchValue;
 
+    public int scoreValue = 20;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -148,6 +150,14 @@ public class Bubble : MonoBehaviour
             }
 
             matchValue = bubbleToMatch.matchValue;
+        }
+    }
+
+    public void ScorePoints(int multiplier = 1, int bonus = 0)
+    {
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.AddScore(scoreValue * multiplier + bonus);
         }
     }
 }

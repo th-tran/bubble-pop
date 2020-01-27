@@ -2,28 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ParticleManager : MonoBehaviour
+public class ParticleManager : Singleton<ParticleManager>
 {
     public GameObject clearFXPrefab;
     public GameObject breakFXPrefab;
     public GameObject doubleBreakFXPrefab;
     public GameObject bombFXPrefab;
-
-    // Singleton pattern
-    static ParticleManager _instance;
-    public static ParticleManager Instance { get { return _instance; } }
-
-    void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            _instance = this;
-        }
-    }
 
     public void ClearBubbleFXAt(int x, int y, int z = 0)
     {
