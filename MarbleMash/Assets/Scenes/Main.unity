@@ -473,13 +473,13 @@ MonoBehaviour:
     type: 3}
   tileObstaclePrefab: {fileID: 877982029463913109, guid: 37cc377765bee294089d5bab86467964,
     type: 3}
-  marblePrefabs:
-  - {fileID: 1664362004353522, guid: ded3823fda2b64d07a29783e0ce9acc9, type: 3}
-  - {fileID: 1372902284518312, guid: ddd7ecb364d034ad295c2ea9c8df1999, type: 3}
-  - {fileID: 1764584299026588, guid: d25f2e53e91ce49bd99d368bec39987a, type: 3}
-  - {fileID: 1282329895864240, guid: 16eff60049fa742e09c4e037182057a2, type: 3}
-  - {fileID: 1836425604369276, guid: 7471f6d24260942c499dd3fbbeccadc6, type: 3}
-  - {fileID: 1161606897531048, guid: 805c5ac8742f1457bb6137a92eef3032, type: 3}
+  bubblePrefabs:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   adjacentBombPrefabs:
   - {fileID: 1017203772300780, guid: a03dc1ba3686c43249803d14a0fd5ac1, type: 3}
   - {fileID: 1191681590145648, guid: 906f49d97f93b477489bd1849f2fb8c1, type: 3}
@@ -516,7 +516,7 @@ MonoBehaviour:
   targetTile: {fileID: 0}
   playerInputEnabled: 1
   startingTiles: []
-  startingMarbles: []
+  startingBubbles: []
   fillYOffset: 10
   fillMoveTime: 0.5
   collapseMoveTime: 0.1

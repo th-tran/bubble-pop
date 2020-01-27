@@ -24,13 +24,13 @@ public class BoardTiles : MonoBehaviour
         }
     }
 
-    public void BreakTileAt(List<Marble> marbles)
+    public void BreakTileAt(List<Bubble> bubbles)
     {
-        foreach (Marble marble in marbles)
+        foreach (Bubble bubble in bubbles)
         {
-            if (marble != null)
+            if (bubble != null)
             {
-                BreakTileAt(marble.xIndex, marble.yIndex);
+                BreakTileAt(bubble.xIndex, bubble.yIndex);
             }
         }
     }

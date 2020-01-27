@@ -12,7 +12,7 @@ public class BoardFiller : MonoBehaviour
         m_board = GetComponent<Board>();
     }
 
-    public Marble FillRandomMarbleAt(int x, int y, int falseYOffset = 0, float moveTime = 0.1f)
+    public Bubble FillRandomBubbleAt(int x, int y, int falseYOffset = 0, float moveTime = 0.1f)
     {
         if (m_board == null)
         {
@@ -21,9 +21,9 @@ public class BoardFiller : MonoBehaviour
 
         if (m_board.boardQuery.IsWithinBounds(x, y))
         {
-            GameObject randomMarble = Instantiate(m_board.boardQuery.GetRandomMarble(), Vector3.zero, Quaternion.identity) as GameObject;
-            MakeMarble(randomMarble, x, y, falseYOffset, moveTime);
-            return randomMarble.GetComponent<Marble>();
+            GameObject randomBubble = Instantiate(m_board.boardQuery.GetRandomBubble(), Vector3.zero, Quaternion.identity) as GameObject;
+            MakeBubble(randomBubble, x, y, falseYOffset, moveTime);
+            return randomBubble.GetComponent<Bubble>();
         }
 
         return null;
@@ -39,7 +39,7 @@ public class BoardFiller : MonoBehaviour
         if (m_board.boardQuery.IsWithinBounds(x, y))
         {
             GameObject randomBlocker = Instantiate(m_board.boardQuery.GetRandomBlocker(), Vector3.zero, Quaternion.identity) as GameObject;
-            MakeMarble(randomBlocker, x, y, falseYOffset, moveTime);
+            MakeBubble(randomBlocker, x, y, falseYOffset, moveTime);
             return randomBlocker.GetComponent<Blocker>();
         }
 
@@ -57,7 +57,7 @@ public class BoardFiller : MonoBehaviour
             for (int j = 0; j < m_board.height; j++)
             {
                 // If the space is unoccupied and does not contain an Obstacle tile...
-                if (m_board.allMarbles[i, j] == null && m_board.allTiles[i, j].tileType != TileType.Obstacle)
+                if (m_board.allBubbles[i, j] == null && m_board.allTiles[i, j].tileType != TileType.Obstacle)
                 {
                     if (j == m_board.height - 1 && m_board.boardQuery.CanAddBlocker())
                     {
@@ -66,16 +66,16 @@ public class BoardFiller : MonoBehaviour
                     }
                     else
                     {
-                        // ...fill in a Marble
-                        FillRandomMarbleAt(i, j, falseYOffset, moveTime);
+                        // ...fill in a Bubble
+                        FillRandomBubbleAt(i, j, falseYOffset, moveTime);
                         iterations = 0;
 
-                        // If we form a match while filling in the Marble...
+                        // If we form a match while filling in the Bubble...
                         while (m_board.boardQuery.HasMatch(i, j))
                         {
-                            // ...remove the Marble and try again
-                            m_board.boardClearer.ClearMarbleAt(i, j);
-                            FillRandomMarbleAt(i, j, falseYOffset, moveTime);
+                            // ...remove the Bubble and try again
+                            m_board.boardClearer.ClearBubbleAt(i, j);
+                            FillRandomBubbleAt(i, j, falseYOffset, moveTime);
 
                             // ...check to prevent infinite loop
                             iterations++;
@@ -111,7 +111,7 @@ public class BoardFiller : MonoBehaviour
         }
     }
 
-    public void MakeMarble(GameObject prefab, int x, int y, int falseYOffset = 0, float moveTime = 0.1f)
+    public void MakeBubble(GameObject prefab, int x, int y, int falseYOffset = 0, float moveTime = 0.1f)
     {
         if (m_board == null)
         {
@@ -121,18 +121,18 @@ public class BoardFiller : MonoBehaviour
         // Only run the logic on valid GameObject and if we are within the boundaries of the Board
         if (prefab != null && m_board.boardQuery.IsWithinBounds(x, y))
         {
-            Marble marble = prefab.GetComponent<Marble>();
-            marble.Init(m_board);
-            PlaceMarble(marble, x, y);
+            Bubble bubble = prefab.GetComponent<Bubble>();
+            bubble.Init(m_board);
+            PlaceBubble(bubble, x, y);
 
-            // Allow the Marble to be placed higher than the Board, so it can be moved into place
+            // Allow the Bubble to be placed higher than the Board, so it can be moved into place
             if (falseYOffset != 0)
             {
                 prefab.transform.position = new Vector3(x, y + falseYOffset, 0);
-                marble.Move(x, y, moveTime);
+                bubble.Move(x, y, moveTime);
             }
 
-            // Parent the Marble to the Board
+            // Parent the Bubble to the Board
             prefab.transform.parent = transform;
         }
     }
@@ -151,28 +151,28 @@ public class BoardFiller : MonoBehaviour
         return null;
     }
 
-    public void PlaceMarble(Marble marble, int x, int y)
+    public void PlaceBubble(Bubble bubble, int x, int y)
     {
         if (m_board == null)
         {
             return;
         }
 
-        if (marble == null)
+        if (bubble == null)
         {
-            Debug.LogWarning("BOARD: Invalid Marble!");
+            Debug.LogWarning("BOARD: Invalid Bubble!");
             return;
         }
 
-        marble.transform.position = new Vector3(x, y, 0);
-        marble.transform.rotation = Quaternion.identity;
+        bubble.transform.position = new Vector3(x, y, 0);
+        bubble.transform.rotation = Quaternion.identity;
 
         if (m_board.boardQuery.IsWithinBounds(x, y))
         {
-            m_board.allMarbles[x, y] = marble;
+            m_board.allBubbles[x, y] = bubble;
         }
 
-        marble.SetCoordinates(x, y);
+        bubble.SetCoordinates(x, y);
     }
 
     public IEnumerator RefillRoutine()

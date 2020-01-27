@@ -13,26 +13,26 @@ public class BoardMatcher : MonoBehaviour
         m_board = GetComponent<Board>();
     }
 
-    public List<Marble> FindMatches(int startX, int startY, Vector2 searchDirection, int minLength = 3)
+    public List<Bubble> FindMatches(int startX, int startY, Vector2 searchDirection, int minLength = 3)
     {
-        // Keep a running list of Marbles
-        List<Marble> matches = new List<Marble>();
+        // Keep a running list of Bubbles
+        List<Bubble> matches = new List<Bubble>();
 
-        Marble startMarble = null;
+        Bubble startBubble = null;
 
-        // Get a starting Marble at an (x,y) position in the array of Marbles
+        // Get a starting Bubble at an (x,y) position in the array of Bubbles
         if (m_board.boardQuery.IsWithinBounds(startX, startY))
         {
-            startMarble = m_board.allMarbles[startX, startY];
+            startBubble = m_board.allBubbles[startX, startY];
         }
 
-        if (startMarble != null)
+        if (startBubble != null)
         {
-            matches.Add(startMarble);
+            matches.Add(startBubble);
         }
         else
         {
-            return new List<Marble>();
+            return new List<Bubble>();
         }
 
         // Use the search direction to increment to the next space to look
@@ -51,19 +51,19 @@ public class BoardMatcher : MonoBehaviour
                 break;
             }
 
-            // Find the adjacent Marble
-            Marble nextMarble = m_board.allMarbles[nextX, nextY];
+            // Find the adjacent Bubble
+            Bubble nextBubble = m_board.allBubbles[nextX, nextY];
 
-            if (nextMarble == null)
+            if (nextBubble == null)
             {
                 break;
             }
             else
             {
-                // If it matches then add it our running list of Marbles
-                if (nextMarble.matchValue == startMarble.matchValue && !matches.Contains(nextMarble) && nextMarble.matchValue != MatchValue.None)
+                // If it matches then add it our running list of Bubbles
+                if (nextBubble.matchValue == startBubble.matchValue && !matches.Contains(nextBubble) && nextBubble.matchValue != MatchValue.None)
                 {
-                    matches.Add(nextMarble);
+                    matches.Add(nextBubble);
                 }
                 else
                 {
@@ -74,62 +74,62 @@ public class BoardMatcher : MonoBehaviour
 
         // If list length is greater than given minimum (usually 3), then return the list.
         // Otherwise, return an empty list.
-        return (matches.Count >= minLength) ? matches : new List<Marble>();
+        return (matches.Count >= minLength) ? matches : new List<Bubble>();
 
     }
 
-    public List<Marble> FindVerticalMatches(int startX, int startY, int minLength = 3)
+    public List<Bubble> FindVerticalMatches(int startX, int startY, int minLength = 3)
     {
-        List<Marble> upwardMatches = FindMatches(startX, startY, new Vector2(0, 1), 2);
-        List<Marble> downwardMatches = FindMatches(startX, startY, new Vector2(0, -1), 2);
+        List<Bubble> upwardMatches = FindMatches(startX, startY, new Vector2(0, 1), 2);
+        List<Bubble> downwardMatches = FindMatches(startX, startY, new Vector2(0, -1), 2);
 
-        List<Marble> combinedMatches = upwardMatches.Union(downwardMatches).ToList();
+        List<Bubble> combinedMatches = upwardMatches.Union(downwardMatches).ToList();
 
-        return (combinedMatches.Count >= minLength) ? combinedMatches : new List<Marble>();
+        return (combinedMatches.Count >= minLength) ? combinedMatches : new List<Bubble>();
     }
 
-    public List<Marble> FindHorizontalMatches(int startX, int startY, int minLength = 3)
+    public List<Bubble> FindHorizontalMatches(int startX, int startY, int minLength = 3)
     {
-        List<Marble> rightMatches = FindMatches(startX, startY, new Vector2(1, 0), 2);
-        List<Marble> leftMatches = FindMatches(startX, startY, new Vector2(-1, 0), 2);
+        List<Bubble> rightMatches = FindMatches(startX, startY, new Vector2(1, 0), 2);
+        List<Bubble> leftMatches = FindMatches(startX, startY, new Vector2(-1, 0), 2);
 
-        List<Marble> combinedMatches = rightMatches.Union(leftMatches).ToList();
+        List<Bubble> combinedMatches = rightMatches.Union(leftMatches).ToList();
 
-        return (combinedMatches.Count >= minLength) ? combinedMatches : new List<Marble>();
+        return (combinedMatches.Count >= minLength) ? combinedMatches : new List<Bubble>();
 
     }
 
-    public List<Marble> FindMatchesAt(int x, int y, int minLength = 3)
+    public List<Bubble> FindMatchesAt(int x, int y, int minLength = 3)
     {
-        List<Marble> horizontalMatches = FindHorizontalMatches(x, y, minLength);
-        List<Marble> verticalMatches = FindVerticalMatches(x, y, minLength);
+        List<Bubble> horizontalMatches = FindHorizontalMatches(x, y, minLength);
+        List<Bubble> verticalMatches = FindVerticalMatches(x, y, minLength);
 
-        List<Marble> combinedMatches = horizontalMatches.Union(verticalMatches).ToList();
+        List<Bubble> combinedMatches = horizontalMatches.Union(verticalMatches).ToList();
 
         return combinedMatches;
     }
 
-    public List<Marble> FindMatchesAt(List<Marble> marbles, int minLength = 3)
+    public List<Bubble> FindMatchesAt(List<Bubble> bubbles, int minLength = 3)
     {
-        List<Marble> matches = new List<Marble>();
+        List<Bubble> matches = new List<Bubble>();
 
-        foreach (Marble marble in marbles)
+        foreach (Bubble bubble in bubbles)
         {
-            matches = matches.Union(FindMatchesAt(marble.xIndex, marble.yIndex, minLength)).ToList();
+            matches = matches.Union(FindMatchesAt(bubble.xIndex, bubble.yIndex, minLength)).ToList();
         }
 
         return matches;
     }
 
-    public List<Marble> FindAllMatches()
+    public List<Bubble> FindAllMatches()
     {
-        List<Marble> combinedMatches = new List<Marble>();
+        List<Bubble> combinedMatches = new List<Bubble>();
 
         for (int i = 0; i < m_board.width; i++)
         {
             for (int j = 0; j < m_board.height; j++)
             {
-                List<Marble> matches = FindMatchesAt(i, j);
+                List<Bubble> matches = FindMatchesAt(i, j);
                 combinedMatches = combinedMatches.Union(matches).ToList();
             }
         }
@@ -137,24 +137,24 @@ public class BoardMatcher : MonoBehaviour
         return combinedMatches;
     }
 
-    public List<Marble> FindAllMatchValue(MatchValue matchValue)
+    public List<Bubble> FindAllMatchValue(MatchValue matchValue)
     {
-        List<Marble> foundMarbles = new List<Marble>();
+        List<Bubble> foundBubbles = new List<Bubble>();
 
         for (int i = 0; i < m_board.width; i++)
         {
             for (int j = 0; j < m_board.height; j++)
             {
-                if (m_board.allMarbles[i,j] != null)
+                if (m_board.allBubbles[i,j] != null)
                 {
-                    if (m_board.allMarbles[i,j].matchValue == matchValue)
+                    if (m_board.allBubbles[i,j].matchValue == matchValue)
                     {
-                        foundMarbles.Add(m_board.allMarbles[i,j]);
+                        foundBubbles.Add(m_board.allBubbles[i,j]);
                     }
                 }
             }
         }
 
-        return foundMarbles;
+        return foundBubbles;
     }
 }

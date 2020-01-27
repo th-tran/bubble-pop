@@ -12,20 +12,20 @@ public class BoardBomber : MonoBehaviour
         m_board = GetComponent<Board>();
     }
 
-    public GameObject DropBomb(int x, int y, Vector2 swapDirection, List<Marble> marbles)
+    public GameObject DropBomb(int x, int y, Vector2 swapDirection, List<Bubble> bubbles)
     {
         GameObject bomb = null;
         MatchValue matchValue = MatchValue.None;
 
-        if (marbles != null)
+        if (bubbles != null)
         {
-            matchValue = m_board.boardQuery.FindMatchValue(marbles);
+            matchValue = m_board.boardQuery.FindMatchValue(bubbles);
         }
 
         // Only drop a bomb if player matched 4 or more
-        if (marbles.Count >= 4 && matchValue != MatchValue.None)
+        if (bubbles.Count >= 4 && matchValue != MatchValue.None)
         {
-            if (m_board.boardQuery.IsCornerMatch(marbles))
+            if (m_board.boardQuery.IsCornerMatch(bubbles))
             {
                 // Adjacent bomb
                 GameObject adjacentBomb = m_board.boardQuery.FindByMatchValue(m_board.adjacentBombPrefabs, matchValue);
@@ -34,7 +34,7 @@ public class BoardBomber : MonoBehaviour
                     bomb = m_board.boardFiller.MakeBomb(adjacentBomb, x, y);
                 }
             }
-            else if (marbles.Count >= 5)
+            else if (bubbles.Count >= 5)
             {
                 // Color bomb
                 if (m_board.colorBombPrefab != null)
@@ -72,7 +72,7 @@ public class BoardBomber : MonoBehaviour
 
         if (m_board.boardQuery.IsWithinBounds(x,y))
         {
-            m_board.allMarbles[x,y] = bomb.GetComponent<Bomb>();
+            m_board.allBubbles[x,y] = bomb.GetComponent<Bomb>();
         }
     }
 }

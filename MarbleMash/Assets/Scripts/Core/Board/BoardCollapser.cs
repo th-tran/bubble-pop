@@ -13,35 +13,35 @@ public class BoardCollapser : MonoBehaviour
         m_board = GetComponent<Board>();
     }
 
-    public List<Marble> CollapseColumn(int column, float collapseTime = 0.1f)
+    public List<Bubble> CollapseColumn(int column, float collapseTime = 0.1f)
     {
-        // Running list of Marbles to move
-        List<Marble> movingMarbles = new List<Marble>();
+        // Running list of Bubbles to move
+        List<Bubble> movingBubbles = new List<Bubble>();
 
         // loop from the bottom of the column
         for (int i = 0; i < m_board.height - 1; i++)
         {
             // If the current space is empty and not occupied by an Obstacle Tile...
-            if (m_board.allMarbles[column, i] == null && m_board.allTiles[column, i].tileType != TileType.Obstacle)
+            if (m_board.allBubbles[column, i] == null && m_board.allTiles[column, i].tileType != TileType.Obstacle)
             {
-                // ...loop from the space above it to the top of the column, to search for the next Marble
+                // ...loop from the space above it to the top of the column, to search for the next Bubble
                 for (int j = i + 1; j < m_board.height; j++)
                 {
-                    // If we find a Marble...
-                    if (m_board.allMarbles[column, j] != null)
+                    // If we find a Bubble...
+                    if (m_board.allBubbles[column, j] != null)
                     {
-                        // ...move the Marble downward to fill in the space and update the Marble array
-                        m_board.allMarbles[column, j].Move(column, i, collapseTime * (j - i));
-                        m_board.allMarbles[column, i] = m_board.allMarbles[column, j];
-                        m_board.allMarbles[column, i].SetCoordinates(column, i);
+                        // ...move the Bubble downward to fill in the space and update the Bubble array
+                        m_board.allBubbles[column, j].Move(column, i, collapseTime * (j - i));
+                        m_board.allBubbles[column, i] = m_board.allBubbles[column, j];
+                        m_board.allBubbles[column, i].SetCoordinates(column, i);
 
-                        // ...add Marble to the list of moving Marbles
-                        if (!movingMarbles.Contains(m_board.allMarbles[column, i]))
+                        // ...add Bubble to the list of moving Bubbles
+                        if (!movingBubbles.Contains(m_board.allBubbles[column, i]))
                         {
-                            movingMarbles.Add(m_board.allMarbles[column, i]);
+                            movingBubbles.Add(m_board.allBubbles[column, i]);
                         }
 
-                        m_board.allMarbles[column, j] = null;
+                        m_board.allBubbles[column, j] = null;
 
                         // ...break out of the loop and stop searching
                         break;
@@ -50,31 +50,31 @@ public class BoardCollapser : MonoBehaviour
             }
         }
 
-        return movingMarbles;
+        return movingBubbles;
     }
 
-    public List<Marble> CollapseColumn(List<Marble> marbles, float collapseTime = 0.1f)
+    public List<Bubble> CollapseColumn(List<Bubble> bubbles, float collapseTime = 0.1f)
     {
-        List<Marble> movingMarbles = new List<Marble>();
+        List<Bubble> movingBubbles = new List<Bubble>();
 
-        List<int> columnsToCollapse = m_board.boardQuery.GetColumns(marbles);
+        List<int> columnsToCollapse = m_board.boardQuery.GetColumns(bubbles);
 
         foreach (int column in columnsToCollapse)
         {
-            movingMarbles = movingMarbles.Union(CollapseColumn(column, collapseTime)).ToList();
+            movingBubbles = movingBubbles.Union(CollapseColumn(column, collapseTime)).ToList();
         }
 
-        return movingMarbles;
+        return movingBubbles;
     }
 
-    public List<Marble> CollapseColumn(List<int> columnsToCollapse, float collapseTime = 0.1f)
+    public List<Bubble> CollapseColumn(List<int> columnsToCollapse, float collapseTime = 0.1f)
     {
-        List<Marble> movingMarbles = new List<Marble>();
+        List<Bubble> movingBubbles = new List<Bubble>();
         foreach (int column in columnsToCollapse)
         {
-            movingMarbles = movingMarbles.Union(CollapseColumn(column, collapseTime)).ToList();
+            movingBubbles = movingBubbles.Union(CollapseColumn(column, collapseTime)).ToList();
         }
 
-        return movingMarbles;
+        return movingBubbles;
     }
 }

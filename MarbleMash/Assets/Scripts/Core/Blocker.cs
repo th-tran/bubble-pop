@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Blocker : Marble
+public class Blocker : Bubble
 {
     public bool clearedByBomb = false;
     public bool clearedAtBottom = true;

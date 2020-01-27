@@ -16,7 +16,7 @@ public enum MatchValue
 }
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class Marble : MonoBehaviour
+public class Bubble : MonoBehaviour
 {
     public int xIndex;
     public int yIndex;
@@ -94,7 +94,7 @@ public class Marble : MonoBehaviour
                 reachedDestination = true;
                 if (m_board != null)
                 {
-                    m_board.boardFiller.PlaceMarble(this, (int) destination.x, (int) destination.y);
+                    m_board.boardFiller.PlaceBubble(this, (int) destination.x, (int) destination.y);
                 }
                 break;
             }
@@ -122,7 +122,7 @@ public class Marble : MonoBehaviour
                     t = t*t*t*(t*(t*6 - 15) + 10);
                     break;
             }
-            // Move the marble
+            // Move the bubble
             transform.position = Vector3.Lerp(startPosition, destination, t);
 
             // Wait until next frame
@@ -132,22 +132,22 @@ public class Marble : MonoBehaviour
         m_isMoving = false;
     }
 
-    public void ChangeColor(Marble marbleToMatch)
+    public void ChangeColor(Bubble bubbleToMatch)
     {
         SpriteRenderer rendererToChange = GetComponent<SpriteRenderer>();
 
         Color colorToMatch = Color.clear;
 
-        if (marbleToMatch != null)
+        if (bubbleToMatch != null)
         {
-            SpriteRenderer rendererToMatch = marbleToMatch.GetComponent<SpriteRenderer>();
+            SpriteRenderer rendererToMatch = bubbleToMatch.GetComponent<SpriteRenderer>();
 
             if (rendererToMatch != null && rendererToChange != null)
             {
                 rendererToChange.color = rendererToMatch.color;
             }
 
-            matchValue = marbleToMatch.matchValue;
+            matchValue = bubbleToMatch.matchValue;
         }
     }
 }

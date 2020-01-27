@@ -29,14 +29,14 @@ public class BoardQuery : MonoBehaviour
         return objectArray[randomIndex];
     }
 
-    public GameObject GetRandomMarble()
+    public GameObject GetRandomBubble()
     {
         if (m_board == null)
         {
             return null;
         }
 
-        return GetRandomObject(m_board.marblePrefabs);
+        return GetRandomObject(m_board.bubblePrefabs);
     }
 
     public GameObject GetRandomBlocker()
@@ -49,54 +49,54 @@ public class BoardQuery : MonoBehaviour
         return GetRandomObject(m_board.blockerPrefabs);
     }
 
-    public List<int> GetColumns(List<Marble> marbles)
+    public List<int> GetColumns(List<Bubble> bubbles)
     {
         List<int> columns = new List<int>();
 
-        foreach (Marble marble in marbles)
+        foreach (Bubble bubble in bubbles)
         {
-            if (!columns.Contains(marble.xIndex))
+            if (!columns.Contains(bubble.xIndex))
             {
-                columns.Add(marble.xIndex);
+                columns.Add(bubble.xIndex);
             }
         }
 
         return columns;
     }
 
-    public List<Marble> GetRowMarbles(int row)
+    public List<Bubble> GetRowBubbles(int row)
     {
-        List<Marble> marbles = new List<Marble>();
+        List<Bubble> bubbles = new List<Bubble>();
 
         for (int i = 0; i < m_board.width; i++)
         {
-            if (m_board.allMarbles[i, row] != null)
+            if (m_board.allBubbles[i, row] != null)
             {
-                marbles.Add(m_board.allMarbles[i, row]);
+                bubbles.Add(m_board.allBubbles[i, row]);
             }
         }
 
-        return marbles;
+        return bubbles;
     }
 
-    public List<Marble> GetColumnMarbles(int column)
+    public List<Bubble> GetColumnBubbles(int column)
     {
-        List<Marble> marbles = new List<Marble>();
+        List<Bubble> bubbles = new List<Bubble>();
 
         for (int i = 0; i < m_board.height; i++)
         {
-            if (m_board.allMarbles[column, i] != null)
+            if (m_board.allBubbles[column, i] != null)
             {
-                marbles.Add(m_board.allMarbles[column, i]);
+                bubbles.Add(m_board.allBubbles[column, i]);
             }
         }
 
-        return marbles;
+        return bubbles;
     }
 
-    public List<Marble> GetAdjacentMarbles(int x, int y, int offset = 1)
+    public List<Bubble> GetAdjacentBubbles(int x, int y, int offset = 1)
     {
-        List<Marble> marbles = new List<Marble>();
+        List<Bubble> bubbles = new List<Bubble>();
 
         for (int i = x - offset; i <= x + offset; i++)
         {
@@ -104,58 +104,58 @@ public class BoardQuery : MonoBehaviour
             {
                 if (IsWithinBounds(i,j))
                 {
-                    marbles.Add(m_board.allMarbles[i, j]);
+                    bubbles.Add(m_board.allBubbles[i, j]);
                 }
             }
         }
 
-        return marbles;
+        return bubbles;
     }
 
-    public List<Marble> GetBombedMarbles(List<Marble> marbles)
+    public List<Bubble> GetBombedBubbles(List<Bubble> bubbles)
     {
-        List<Marble> allMarblesToClear = new List<Marble>();
+        List<Bubble> allBubblesToClear = new List<Bubble>();
 
-        foreach (Marble marble in marbles)
+        foreach (Bubble bubble in bubbles)
         {
-            if (marble != null)
+            if (bubble != null)
             {
-                List<Marble> marblesToClear = new List<Marble>();
+                List<Bubble> bubblesToClear = new List<Bubble>();
 
-                Bomb bomb = marble.GetComponent<Bomb>();
+                Bomb bomb = bubble.GetComponent<Bomb>();
 
                 if (bomb != null)
                 {
                     switch (bomb.bombType)
                     {
                         case BombType.Column:
-                            marblesToClear = GetColumnMarbles(bomb.xIndex);
+                            bubblesToClear = GetColumnBubbles(bomb.xIndex);
                             break;
                         case BombType.Row:
-                            marblesToClear = GetRowMarbles(bomb.yIndex);
+                            bubblesToClear = GetRowBubbles(bomb.yIndex);
                             break;
                         case BombType.Adjacent:
-                            marblesToClear = GetAdjacentMarbles(bomb.xIndex, bomb.yIndex, 1);
+                            bubblesToClear = GetAdjacentBubbles(bomb.xIndex, bomb.yIndex, 1);
                             break;
                         case BombType.Color:
-                            // TODO: Destroy all marbles of a random color
+                            // TODO: Destroy all bubbles of a random color
                             break;
                         default:
                             break;
                     }
                 }
 
-                allMarblesToClear = allMarblesToClear.Union(marblesToClear).ToList();
-                allMarblesToClear = RemoveBlockers(allMarblesToClear);
+                allBubblesToClear = allBubblesToClear.Union(bubblesToClear).ToList();
+                allBubblesToClear = RemoveBlockers(allBubblesToClear);
             }
         }
 
-        return allMarblesToClear;
+        return allBubblesToClear;
     }
 
-    public bool IsColorBomb(Marble marble)
+    public bool IsColorBomb(Bubble bubble)
     {
-        Bomb bomb = marble.GetComponent<Bomb>();
+        Bomb bomb = bubble.GetComponent<Bomb>();
 
         if (bomb != null)
         {
@@ -165,30 +165,30 @@ public class BoardQuery : MonoBehaviour
         return false;
     }
 
-    public bool IsCornerMatch(List<Marble> marbles)
+    public bool IsCornerMatch(List<Bubble> bubbles)
     {
         bool vertical = false;
         bool horizontal = false;
         int xStart = -1;
         int yStart = -1;
 
-        foreach (Marble marble in marbles)
+        foreach (Bubble bubble in bubbles)
         {
-            if (marble != null)
+            if (bubble != null)
             {
                 if (xStart == -1 || yStart == -1)
                 {
-                    xStart = marble.xIndex;
-                    yStart = marble.yIndex;
+                    xStart = bubble.xIndex;
+                    yStart = bubble.yIndex;
                     continue;
                 }
 
-                if (marble.xIndex != xStart && marble.yIndex == yStart)
+                if (bubble.xIndex != xStart && bubble.yIndex == yStart)
                 {
                     horizontal = true;
                 }
 
-                if (marble.xIndex == xStart && marble.yIndex != yStart)
+                if (bubble.xIndex == xStart && bubble.yIndex != yStart)
                 {
                     vertical = true;
                 }
@@ -213,18 +213,18 @@ public class BoardQuery : MonoBehaviour
         return (Mathf.Abs(start.xIndex - end.xIndex) + Mathf.Abs(start.yIndex - end.yIndex) == 1);
     }
 
-    public bool IsCollapsed(List<Marble> marbles)
+    public bool IsCollapsed(List<Bubble> bubbles)
     {
-        foreach (Marble marble in marbles)
+        foreach (Bubble bubble in bubbles)
         {
-            if (marble != null)
+            if (bubble != null)
             {
-                if (marble.transform.position.y - (float)marble.yIndex > 0.001f)
+                if (bubble.transform.position.y - (float)bubble.yIndex > 0.001f)
                 {
                     return false;
                 }
 
-                if (marble.transform.position.x - (float)marble.xIndex > 0.001f)
+                if (bubble.transform.position.x - (float)bubble.xIndex > 0.001f)
                 {
                     return false;
                 }
@@ -237,7 +237,7 @@ public class BoardQuery : MonoBehaviour
     public bool HasMatch(int x, int y, int minLength = 3)
     {
         // Find matches at given (x,y)
-        List<Marble> matches = m_board.boardMatcher.FindMatchesAt(x, y, minLength);
+        List<Bubble> matches = m_board.boardMatcher.FindMatchesAt(x, y, minLength);
 
         // Return whether matches were found
         return (matches.Count > 0);
@@ -249,9 +249,9 @@ public class BoardQuery : MonoBehaviour
 
         for (int i = 0; i < m_board.width; i++)
         {
-            if (m_board.allMarbles[i,row] != null)
+            if (m_board.allBubbles[i,row] != null)
             {
-                Blocker blockerComponent = m_board.allMarbles[i,row].GetComponent<Blocker>();
+                Blocker blockerComponent = m_board.allBubbles[i,row].GetComponent<Blocker>();
 
                 if (blockerComponent != null)
                 {
@@ -286,10 +286,10 @@ public class BoardQuery : MonoBehaviour
                 && m_board.blockerCount < m_board.maxBlockers);
     }
 
-    public List<Marble> RemoveBlockers(List<Marble> bombedMarbles)
+    public List<Bubble> RemoveBlockers(List<Bubble> bombedBubbles)
     {
         List<Blocker> blockers = FindAllBlockers();
-        List<Marble> marblesToRemove = new List<Marble>();
+        List<Bubble> bubblesToRemove = new List<Bubble>();
 
         foreach (Blocker blocker in blockers)
         {
@@ -297,21 +297,21 @@ public class BoardQuery : MonoBehaviour
             {
                 if (!blocker.clearedByBomb)
                 {
-                    marblesToRemove.Add(blocker);
+                    bubblesToRemove.Add(blocker);
                 }
             }
         }
 
-        return bombedMarbles.Except(marblesToRemove).ToList();
+        return bombedBubbles.Except(bubblesToRemove).ToList();
     }
 
-    public MatchValue FindMatchValue(List<Marble> marbles)
+    public MatchValue FindMatchValue(List<Bubble> bubbles)
     {
-        foreach (Marble marble in marbles)
+        foreach (Bubble bubble in bubbles)
         {
-            if (marble != null)
+            if (bubble != null)
             {
-                return marble.matchValue;
+                return bubble.matchValue;
             }
         }
 
@@ -327,11 +327,11 @@ public class BoardQuery : MonoBehaviour
 
         foreach (GameObject gameObject in prefabs)
         {
-            Marble marble = gameObject.GetComponent<Marble>();
+            Bubble bubble = gameObject.GetComponent<Bubble>();
 
-            if (marble != null)
+            if (bubble != null)
             {
-                if (marble.matchValue == matchValue)
+                if (bubble.matchValue == matchValue)
                 {
                     return gameObject;
                 }

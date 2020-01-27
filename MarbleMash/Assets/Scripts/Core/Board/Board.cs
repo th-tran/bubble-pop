@@ -36,8 +36,8 @@ public class Board : MonoBehaviour
     public GameObject tileNormalPrefab;
     // Prefab representing an empty, unoccupied Tile
     public GameObject tileObstaclePrefab;
-    // Array of Marble Prefabs
-    public GameObject[] marblePrefabs;
+    // Array of Bubble Prefabs
+    public GameObject[] bubblePrefabs;
 
     // Prefabs representing Bombs
     public GameObject[] adjacentBombPrefabs;
@@ -54,15 +54,15 @@ public class Board : MonoBehaviour
     public float chanceForBlocker = 0.1f;
     public GameObject[] blockerPrefabs;
 
-    // The time required to swap Marbles between the target and clicked Tile
+    // The time required to swap Bubbles between the target and clicked Tile
     float m_swapTime = 0.5f;
     // The base delay between events
     float m_delay = 0.2f;
 
     // Array of all the Board's Tiles
     public Tile[,] allTiles;
-    // Array of all of the Board's Marbles
-    public Marble[,] allMarbles;
+    // Array of all of the Board's Bubbles
+    public Bubble[,] allBubbles;
 
     // Tile first clicked by mouse
     public Tile clickedTile;
@@ -74,10 +74,10 @@ public class Board : MonoBehaviour
 
     // Manually positioned Tiles, placed before the Board is filled
     public StartingObject[] startingTiles;
-    // Manually positioned Marbles, placed before the Board is filled
-    public StartingObject[] startingMarbles;
+    // Manually positioned Bubbles, placed before the Board is filled
+    public StartingObject[] startingBubbles;
 
-    // Y Offset used to make the marbles "fall" into place to fill the Board
+    // Y Offset used to make the bubbles "fall" into place to fill the Board
     public int fillYOffset = 10;
     // Time used to fill the Board
     public float fillMoveTime = 0.5f;
@@ -114,8 +114,8 @@ public class Board : MonoBehaviour
     {
         // Initialize array of Tiles
         allTiles = new Tile[width,height];
-        // initialize array of Marbles
-        allMarbles = new Marble[width,height];
+        // initialize array of Bubbles
+        allBubbles = new Bubble[width,height];
 
         boardSetup.SetupBoard();
 
@@ -133,51 +133,51 @@ public class Board : MonoBehaviour
         // If player input is enabled...
         if (playerInputEnabled)
         {
-            // ...set the corresponding Marbles to the clicked Tile and target Tile
-            Marble clickedMarble = allMarbles[clickedTile.xIndex, clickedTile.yIndex];
-            Marble targetMarble = allMarbles[targetTile.xIndex, targetTile.yIndex];
+            // ...set the corresponding Bubbles to the clicked Tile and target Tile
+            Bubble clickedBubble = allBubbles[clickedTile.xIndex, clickedTile.yIndex];
+            Bubble targetBubble = allBubbles[targetTile.xIndex, targetTile.yIndex];
 
-            if (clickedMarble != null && targetMarble != null)
+            if (clickedBubble != null && targetBubble != null)
             {
-                // Move the clicked Marble to the target Marble and vice versa
-                clickedMarble.Move(targetTile.xIndex, targetTile.yIndex, m_swapTime);
-                targetMarble.Move(clickedTile.xIndex, clickedTile.yIndex, m_swapTime);
+                // Move the clicked Bubble to the target Bubble and vice versa
+                clickedBubble.Move(targetTile.xIndex, targetTile.yIndex, m_swapTime);
+                targetBubble.Move(clickedTile.xIndex, clickedTile.yIndex, m_swapTime);
 
                 // Wait for the swap time
                 yield return new WaitForSeconds(m_swapTime);
 
-                // Find all matches for each Marble after the swap
-                List<Marble> clickedMarbleMatches = boardMatcher.FindMatchesAt(clickedTile.xIndex, clickedTile.yIndex);
-                List<Marble> targetMarbleMatches = boardMatcher.FindMatchesAt(targetTile.xIndex, targetTile.yIndex);
+                // Find all matches for each Bubble after the swap
+                List<Bubble> clickedBubbleMatches = boardMatcher.FindMatchesAt(clickedTile.xIndex, clickedTile.yIndex);
+                List<Bubble> targetBubbleMatches = boardMatcher.FindMatchesAt(targetTile.xIndex, targetTile.yIndex);
 
-                // Check if color bomb was triggered, and if so get the list of corresponding marbles
-                List<Marble> colorMatches = new List<Marble>();
-                if (boardQuery.IsColorBomb(clickedMarble) && !boardQuery.IsColorBomb(targetMarble))
+                // Check if color bomb was triggered, and if so get the list of corresponding bubbles
+                List<Bubble> colorMatches = new List<Bubble>();
+                if (boardQuery.IsColorBomb(clickedBubble) && !boardQuery.IsColorBomb(targetBubble))
                 {
-                    clickedMarble.matchValue = targetMarble.matchValue;
-                    colorMatches = boardMatcher.FindAllMatchValue(clickedMarble.matchValue);
+                    clickedBubble.matchValue = targetBubble.matchValue;
+                    colorMatches = boardMatcher.FindAllMatchValue(clickedBubble.matchValue);
                 }
-                else if (!boardQuery.IsColorBomb(clickedMarble) && boardQuery.IsColorBomb(targetMarble))
+                else if (!boardQuery.IsColorBomb(clickedBubble) && boardQuery.IsColorBomb(targetBubble))
                 {
-                    targetMarble.matchValue = clickedMarble.matchValue;
-                    colorMatches = boardMatcher.FindAllMatchValue(targetMarble.matchValue);
+                    targetBubble.matchValue = clickedBubble.matchValue;
+                    colorMatches = boardMatcher.FindAllMatchValue(targetBubble.matchValue);
                 }
-                else if (boardQuery.IsColorBomb(clickedMarble) && boardQuery.IsColorBomb(targetMarble))
+                else if (boardQuery.IsColorBomb(clickedBubble) && boardQuery.IsColorBomb(targetBubble))
                 {
-                    foreach(Marble marble in allMarbles)
+                    foreach(Bubble bubble in allBubbles)
                     {
-                        if (!colorMatches.Contains(marble))
+                        if (!colorMatches.Contains(bubble))
                         {
-                            colorMatches.Add(marble);
+                            colorMatches.Add(bubble);
                         }
                     }
                 }
 
-                // If no matches are found, then swap the Marbles back
-                if (clickedMarbleMatches.Count == 0 && targetMarbleMatches.Count == 0 && colorMatches.Count == 0)
+                // If no matches are found, then swap the Bubbles back
+                if (clickedBubbleMatches.Count == 0 && targetBubbleMatches.Count == 0 && colorMatches.Count == 0)
                 {
-                    clickedMarble.Move(clickedTile.xIndex, clickedTile.yIndex, m_swapTime);
-                    targetMarble.Move(targetTile.xIndex, targetTile.yIndex, m_swapTime);
+                    clickedBubble.Move(clickedTile.xIndex, clickedTile.yIndex, m_swapTime);
+                    targetBubble.Move(targetTile.xIndex, targetTile.yIndex, m_swapTime);
 
                     yield return new WaitForSeconds(m_swapTime);
                 }
@@ -186,46 +186,46 @@ public class Board : MonoBehaviour
                     // Clear matches and refill the Board
                     Vector2 swipeDirection = new Vector2(targetTile.xIndex - clickedTile.xIndex, targetTile.yIndex - clickedTile.yIndex);
                     // Drop bomb in-place
-                    m_clickedTileBomb = boardBomber.DropBomb(clickedTile.xIndex, clickedTile.yIndex, swipeDirection, clickedMarbleMatches);
-                    m_targetTileBomb = boardBomber.DropBomb(targetTile.xIndex, targetTile.yIndex, swipeDirection, targetMarbleMatches);
+                    m_clickedTileBomb = boardBomber.DropBomb(clickedTile.xIndex, clickedTile.yIndex, swipeDirection, clickedBubbleMatches);
+                    m_targetTileBomb = boardBomber.DropBomb(targetTile.xIndex, targetTile.yIndex, swipeDirection, targetBubbleMatches);
 
                     // Change bomb color to match
-                    if (m_clickedTileBomb != null && targetMarble != null)
+                    if (m_clickedTileBomb != null && targetBubble != null)
                     {
                         Bomb clickedBomb = m_clickedTileBomb.GetComponent<Bomb>();
                         if (!boardQuery.IsColorBomb(clickedBomb))
                         {
-                            clickedBomb.ChangeColor(targetMarble);
+                            clickedBomb.ChangeColor(targetBubble);
                         }
                     }
 
-                    if (m_targetTileBomb != null && clickedMarble != null)
+                    if (m_targetTileBomb != null && clickedBubble != null)
                     {
                         Bomb targetBomb = m_targetTileBomb.GetComponent<Bomb>();
                         if (!boardQuery.IsColorBomb(targetBomb))
                         {
-                            targetBomb.ChangeColor(clickedMarble);
+                            targetBomb.ChangeColor(clickedBubble);
                         }
                     }
-                    List<Marble> marblesToClear = clickedMarbleMatches.Union(targetMarbleMatches).ToList()
+                    List<Bubble> bubblesToClear = clickedBubbleMatches.Union(targetBubbleMatches).ToList()
                                                                       .Union(colorMatches).ToList();
-                    ClearAndRefillBoard(marblesToClear);
+                    ClearAndRefillBoard(bubblesToClear);
                 }
             }
         }
     }
-    void ClearAndRefillBoard(List<Marble> marbles)
+    void ClearAndRefillBoard(List<Bubble> bubbles)
     {
-        StartCoroutine(ClearAndRefillBoardRoutine(marbles));
+        StartCoroutine(ClearAndRefillBoardRoutine(bubbles));
     }
 
-    IEnumerator ClearAndRefillBoardRoutine(List<Marble> marbles)
+    IEnumerator ClearAndRefillBoardRoutine(List<Bubble> bubbles)
     {
         // Disable player input while the Board is collapsing/refilling
         playerInputEnabled = false;
 
-        // Create a new List of Marbles, using the initial list as a starting point
-        List<Marble> matches = marbles;
+        // Create a new List of Bubbles, using the initial list as a starting point
+        List<Bubble> matches = bubbles;
         do
         {
             // Run the coroutine to clear the Board, collapse any columns to fill in the spaces
@@ -244,46 +244,46 @@ public class Board : MonoBehaviour
         playerInputEnabled = true;
     }
 
-    IEnumerator ClearAndProcessRoutine(List<Marble> marblesToClear)
+    IEnumerator ClearAndProcessRoutine(List<Bubble> bubblesToClear)
     {
-        // List of Marbles to move
-        List<Marble> movingMarbles = new List<Marble>();
-        // List of Marbles that form matches
-        List<Marble> matches = new List<Marble>();
+        // List of Bubbles to move
+        List<Bubble> movingBubbles = new List<Bubble>();
+        // List of Bubbles that form matches
+        List<Bubble> matches = new List<Bubble>();
 
-        //HighlightMarbles(marbles);
+        //HighlightBubbles(bubbles);
 
         bool isFinished = false;
         while (!isFinished)
         {
             // Trigger all bombs
             int oldCount;
-            List<Marble> bombedMarbles = new List<Marble>();
+            List<Bubble> bombedBubbles = new List<Bubble>();
             do
             {
-                // Keep track of number of Marbles affected before bomb triggers
-                oldCount = marblesToClear.Count;
-                // Find Marbles affected by bombs...
-                bombedMarbles = boardQuery.GetBombedMarbles(marblesToClear);
-                // ...and add to list of Marbles to clear
-                marblesToClear = marblesToClear.Union(bombedMarbles).ToList();
+                // Keep track of number of Bubbles affected before bomb triggers
+                oldCount = bubblesToClear.Count;
+                // Find Bubbles affected by bombs...
+                bombedBubbles = boardQuery.GetBombedBubbles(bubblesToClear);
+                // ...and add to list of Bubbles to clear
+                bubblesToClear = bubblesToClear.Union(bombedBubbles).ToList();
             }
-            while (oldCount < marblesToClear.Count);
+            while (oldCount < bubblesToClear.Count);
 
-            // Add any heavy blockers that hit bottom of Board to list of marbles to clear
+            // Add any heavy blockers that hit bottom of Board to list of bubbles to clear
             List<Blocker> bottomBlockers = boardQuery.FindBlockersAt(0, true);
             // Get list of blockers to be cleared
             List<Blocker> allBlockers = boardQuery.FindAllBlockers();
-            List<Blocker> blockersToClear = allBlockers.Intersect(marblesToClear).Cast<Blocker>().ToList();
+            List<Blocker> blockersToClear = allBlockers.Intersect(bubblesToClear).Cast<Blocker>().ToList();
             blockersToClear = blockersToClear.Union(bottomBlockers).ToList();
             blockerCount -= blockersToClear.Count;
 
-            marblesToClear = marblesToClear.Union(blockersToClear).ToList();
+            bubblesToClear = bubblesToClear.Union(blockersToClear).ToList();
 
-            // Clear the Marbles
-            boardClearer.ClearMarbleAt(marblesToClear, bombedMarbles);
-            // Break any Tiles under the cleared Marbles
-            boardTiles.BreakTileAt(marblesToClear);
+            // Clear the Bubbles
+            boardClearer.ClearBubbleAt(bubblesToClear, bombedBubbles);
+            // Break any Tiles under the cleared Bubbles
+            boardTiles.BreakTileAt(bubblesToClear);
 
             // Activate any previously generated bombs
             if (m_clickedTileBomb != null)
@@ -300,19 +300,19 @@ public class Board : MonoBehaviour
 
             yield return new WaitForSeconds(m_delay);
 
-            // Collapse any columns with empty spaces and keep track of what Marbles moved as a result
-            movingMarbles = boardCollapser.CollapseColumn(marblesToClear, collapseMoveTime);
+            // Collapse any columns with empty spaces and keep track of what Bubbles moved as a result
+            movingBubbles = boardCollapser.CollapseColumn(bubblesToClear, collapseMoveTime);
             // Refill empty space from collapsed columns
             yield return StartCoroutine(boardFiller.RefillRoutine());
 
-            // Wait while these Marbles fill in the gaps
-            while (!boardQuery.IsCollapsed(movingMarbles))
+            // Wait while these Bubbles fill in the gaps
+            while (!boardQuery.IsCollapsed(movingBubbles))
             {
                 yield return null;
             }
 
             // Find any matches that form from collapsing
-            matches = boardMatcher.FindMatchesAt(movingMarbles);
+            matches = boardMatcher.FindMatchesAt(movingBubbles);
             // Check if any blockers fell to bottom
             blockersToClear = boardQuery.FindBlockersAt(0, true);
             matches = matches.Union(blockersToClear).ToList();

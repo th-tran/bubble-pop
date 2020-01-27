@@ -11,7 +11,7 @@ public enum BombType
     Color
 }
 
-public class Bomb : Marble
+public class Bomb : Bubble
 {
     public BombType bombType;
 }

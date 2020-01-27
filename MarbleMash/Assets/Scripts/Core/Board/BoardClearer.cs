@@ -18,39 +18,39 @@ public class BoardClearer : MonoBehaviour
         {
             for (int j = 0; j < m_board.height; j++)
             {
-                ClearMarbleAt(i, j);
-                ParticleManager.Instance.ClearMarbleFXAt(i, j);
+                ClearBubbleAt(i, j);
+                ParticleManager.Instance.ClearBubbleFXAt(i, j);
             }
         }
     }
 
-    public void ClearMarbleAt(int x, int y)
+    public void ClearBubbleAt(int x, int y)
     {
-        Marble marbleToClear = m_board.allMarbles[x, y];
+        Bubble bubbleToClear = m_board.allBubbles[x, y];
 
-        if (marbleToClear != null)
+        if (bubbleToClear != null)
         {
-            m_board.allMarbles[x, y] = null;
-            Destroy(marbleToClear.gameObject);
+            m_board.allBubbles[x, y] = null;
+            Destroy(bubbleToClear.gameObject);
         }
 
         //HighlightTileOff(x,y);
     }
 
-    public void ClearMarbleAt(List<Marble> marbles, List<Marble> bombedMarbles)
+    public void ClearBubbleAt(List<Bubble> bubbles, List<Bubble> bombedBubbles)
     {
-        foreach (Marble marble in marbles)
+        foreach (Bubble bubble in bubbles)
         {
-            if (marble != null)
+            if (bubble != null)
             {
-                ClearMarbleAt(marble.xIndex, marble.yIndex);
-                if (bombedMarbles.Contains(marble))
+                ClearBubbleAt(bubble.xIndex, bubble.yIndex);
+                if (bombedBubbles.Contains(bubble))
                 {
-                    ParticleManager.Instance.BombFXAt(marble.xIndex, marble.yIndex);
+                    ParticleManager.Instance.BombFXAt(bubble.xIndex, bubble.yIndex);
                 }
                 else
                 {
-                    ParticleManager.Instance.ClearMarbleFXAt(marble.xIndex, marble.yIndex);
+                    ParticleManager.Instance.ClearBubbleFXAt(bubble.xIndex, bubble.yIndex);
                 }
             }
         }

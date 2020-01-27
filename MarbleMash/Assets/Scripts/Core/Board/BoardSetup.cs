@@ -22,13 +22,13 @@ public class BoardSetup : MonoBehaviour
         // Set up pre-placed Tiles
         SetupTiles();
 
-        // Set up pre-placed Marbles
-        SetupMarbles();
+        // Set up pre-placed Bubbles
+        SetupBubbles();
 
         // Place Camera to frame the Board with a set border
         SetupCamera();
 
-        // Fill empty Tiles of the Board with Marbles
+        // Fill empty Tiles of the Board with Bubbles
         m_board.boardFiller.FillBoard(m_board.fillYOffset, m_board.fillMoveTime);
     }
 
@@ -60,19 +60,19 @@ public class BoardSetup : MonoBehaviour
         }
     }
 
-    public void SetupMarbles()
+    public void SetupBubbles()
     {
         if (m_board == null)
         {
             return;
         }
 
-        foreach (StartingObject sMarble in m_board.startingMarbles)
+        foreach (StartingObject sBubble in m_board.startingBubbles)
         {
-            if (sMarble != null)
+            if (sBubble != null)
             {
-                GameObject marble = Instantiate(sMarble.prefab, new Vector3(sMarble.x, sMarble.y, 0), Quaternion.identity) as GameObject;
-                m_board.boardFiller.MakeMarble(marble, sMarble.x, sMarble.y, m_board.fillYOffset, m_board.fillMoveTime);
+                GameObject bubble = Instantiate(sBubble.prefab, new Vector3(sBubble.x, sBubble.y, 0), Quaternion.identity) as GameObject;
+                m_board.boardFiller.MakeBubble(bubble, sBubble.x, sBubble.y, m_board.fillYOffset, m_board.fillMoveTime);
             }
         }
     }

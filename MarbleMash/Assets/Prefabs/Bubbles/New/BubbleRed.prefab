@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 212319828170564574}
   - component: {fileID: 114243171831313904}
   m_Layer: 0
-  m_Name: MarbleRed
+  m_Name: BubbleRed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -89,7 +89,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1664362004353522}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c230e7d4492cebe4fa761ef22ef5b7f2, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ca0f0953412e944180887d75116c1b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   xIndex: 0

@@ -48,14 +48,14 @@ public class BoardHighlighter : MonoBehaviour
         }
 
         HighlightTileOff(x, y);
-        List<Marble> combinedMatches = m_board.boardMatcher.FindMatchesAt(x, y);
+        List<Bubble> combinedMatches = m_board.boardMatcher.FindMatchesAt(x, y);
         if (combinedMatches.Count > 0)
         {
-            foreach (Marble marble in combinedMatches)
+            foreach (Bubble bubble in combinedMatches)
             {
-                if (marble != null)
+                if (bubble != null)
                 {
-                    HighlightTileOn(marble.xIndex, marble.yIndex, marble.GetComponent<SpriteRenderer>().color);
+                    HighlightTileOn(bubble.xIndex, bubble.yIndex, bubble.GetComponent<SpriteRenderer>().color);
                 }
             }
         }
@@ -77,18 +77,18 @@ public class BoardHighlighter : MonoBehaviour
         }
     }
 
-    void HighlightMarbles(List<Marble> marbles)
+    void HighlightBubbles(List<Bubble> bubbles)
     {
         if (m_board == null)
         {
             return;
         }
 
-        foreach (Marble marble in marbles)
+        foreach (Bubble bubble in bubbles)
         {
-            if (marble != null)
+            if (bubble != null)
             {
-                HighlightTileOn(marble.xIndex, marble.yIndex, marble.GetComponent<SpriteRenderer>().color);
+                HighlightTileOn(bubble.xIndex, bubble.yIndex, bubble.GetComponent<SpriteRenderer>().color);
             }
         }
     }
