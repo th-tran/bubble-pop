@@ -30,8 +30,9 @@ public class Singleton<T> : MonoBehaviour where T: MonoBehaviour
         if (m_instance == null)
         {
             m_instance = this as T;
-            transform.parent = null;
-            DontDestroyOnLoad (this.gameObject);
+            // Uncomment below for persistence
+            //transform.parent = null;
+            //DontDestroyOnLoad (this.gameObject);
         }
         else
         {

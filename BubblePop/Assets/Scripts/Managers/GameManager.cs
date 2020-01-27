@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
-    public int movesLeft = 30;
+    public int movesLeft = 3;
     public int scoreGoal = 10000;
 
     public ScreenFader screenFader;
@@ -16,8 +16,15 @@ public class GameManager : Singleton<GameManager>
     Board m_board;
 
     bool m_isReadyToBegin = false;
+    bool m_isReadyToReload = false;
     bool m_isGameOver = false;
     bool m_isWinner = false;
+
+    public MessageWindow messageWindow;
+
+    public Sprite loseIcon;
+    public Sprite winIcon;
+    public Sprite goalIcon;
 
     // Start is called before the first frame update
     void Start()
@@ -56,12 +63,23 @@ public class GameManager : Singleton<GameManager>
         yield return StartCoroutine(EndGameRoutine());
     }
 
+    public void BeginGame()
+    {
+        m_isReadyToBegin = true;
+    }
+
     IEnumerator StartGameRoutine()
     {
+        if (messageWindow != null)
+        {
+            messageWindow.GetComponent<RectXformMover>().MoveOn();
+            messageWindow.ShowMessage(goalIcon, "score goal\n" + scoreGoal.ToString(), "start");
+        }
+
+        // Keep waiting until player is ready
         while (!m_isReadyToBegin)
         {
-            yield return new WaitForSeconds(2f);
-            m_isReadyToBegin = true;
+            yield return null;
         }
 
         if (screenFader != null)
@@ -91,6 +109,8 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator EndGameRoutine()
     {
+        m_isReadyToReload = false;
+
         if (screenFader != null)
         {
             screenFader.FadeOn();
@@ -98,12 +118,32 @@ public class GameManager : Singleton<GameManager>
 
         if (m_isWinner)
         {
-
+            if (messageWindow != null)
+            {
+                messageWindow.GetComponent<RectXformMover>().MoveOn();
+                messageWindow.ShowMessage(winIcon, "YOU WIN!", "OK");
+            }
         }
         else
         {
-
+            if (messageWindow != null)
+            {
+                messageWindow.GetComponent<RectXformMover>().MoveOn();
+                messageWindow.ShowMessage(loseIcon, "YOU LOSE!", "OK");
+            }
         }
-        yield return null;
+
+        while (!m_isReadyToReload)
+        {
+            yield return null;
+        }
+
+        // TODO: Replace with proper retry option or return to menu
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void ReloadScene()
+    {
+        m_isReadyToReload = true;
     }
 }
