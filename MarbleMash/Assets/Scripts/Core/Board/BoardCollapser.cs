@@ -53,7 +53,7 @@ public class BoardCollapser : MonoBehaviour
         return movingMarbles;
     }
 
-    public List<Marble> CollapseColumn(List<Marble> marbles)
+    public List<Marble> CollapseColumn(List<Marble> marbles, float collapseTime = 0.1f)
     {
         List<Marble> movingMarbles = new List<Marble>();
 
@@ -61,18 +61,18 @@ public class BoardCollapser : MonoBehaviour
 
         foreach (int column in columnsToCollapse)
         {
-            movingMarbles = movingMarbles.Union(CollapseColumn(column)).ToList();
+            movingMarbles = movingMarbles.Union(CollapseColumn(column, collapseTime)).ToList();
         }
 
         return movingMarbles;
     }
 
-    public List<Marble> CollapseColumn(List<int> columnsToCollapse)
+    public List<Marble> CollapseColumn(List<int> columnsToCollapse, float collapseTime = 0.1f)
     {
         List<Marble> movingMarbles = new List<Marble>();
         foreach (int column in columnsToCollapse)
         {
-            movingMarbles = movingMarbles.Union(CollapseColumn(column)).ToList();
+            movingMarbles = movingMarbles.Union(CollapseColumn(column, collapseTime)).ToList();
         }
 
         return movingMarbles;

@@ -71,7 +71,7 @@ public class BoardFiller : MonoBehaviour
                         iterations = 0;
 
                         // If we form a match while filling in the Marble...
-                        while (m_board.boardQuery.HasMatchOnFill(i, j))
+                        while (m_board.boardQuery.HasMatch(i, j))
                         {
                             // ...remove the Marble and try again
                             m_board.boardClearer.ClearMarbleAt(i, j);

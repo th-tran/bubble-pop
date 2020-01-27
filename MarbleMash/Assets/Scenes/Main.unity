@@ -519,6 +519,7 @@ MonoBehaviour:
   startingMarbles: []
   fillYOffset: 10
   fillMoveTime: 0.5
+  collapseMoveTime: 0.1
   boardBomber: {fileID: 0}
   boardClearer: {fileID: 0}
   boardCollapser: {fileID: 0}

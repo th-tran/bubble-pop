@@ -81,6 +81,7 @@ public class Board : MonoBehaviour
     public int fillYOffset = 10;
     // Time used to fill the Board
     public float fillMoveTime = 0.5f;
+    public float collapseMoveTime = 0.1f;
 
     // References to Board components
     public BoardBomber boardBomber;
@@ -206,7 +207,8 @@ public class Board : MonoBehaviour
                             targetBomb.ChangeColor(clickedMarble);
                         }
                     }
-                    List<Marble> marblesToClear = clickedMarbleMatches.Union(targetMarbleMatches).ToList().Union(colorMatches).ToList();
+                    List<Marble> marblesToClear = clickedMarbleMatches.Union(targetMarbleMatches).ToList()
+                                                                      .Union(colorMatches).ToList();
                     ClearAndRefillBoard(marblesToClear);
                 }
             }
@@ -226,12 +228,15 @@ public class Board : MonoBehaviour
         List<Marble> matches = marbles;
         do
         {
-            // Run the coroutine to clear the Board and collapse any columns to fill in the spaces
-            yield return StartCoroutine(ClearAndCollapseRoutine(matches));
-            // Run the coroutine to refill the Board
-            yield return StartCoroutine(boardFiller.RefillRoutine());
+            // Run the coroutine to clear the Board, collapse any columns to fill in the spaces
+            // and refill empty spaces from collapsing
+            yield return StartCoroutine(ClearAndProcessRoutine(matches));
             // Find any subsequent matches and repeat the process
             matches = boardMatcher.FindAllMatches();
+            if (matches.Count > 0)
+            {
+                Debug.Log(matches.Count);
+            }
         }
         while (matches.Count != 0);
 
@@ -239,7 +244,7 @@ public class Board : MonoBehaviour
         playerInputEnabled = true;
     }
 
-    IEnumerator ClearAndCollapseRoutine(List<Marble> marblesToClear)
+    IEnumerator ClearAndProcessRoutine(List<Marble> marblesToClear)
     {
         // List of Marbles to move
         List<Marble> movingMarbles = new List<Marble>();
@@ -296,7 +301,9 @@ public class Board : MonoBehaviour
             yield return new WaitForSeconds(m_delay);
 
             // Collapse any columns with empty spaces and keep track of what Marbles moved as a result
-            movingMarbles = boardCollapser.CollapseColumn(marblesToClear);
+            movingMarbles = boardCollapser.CollapseColumn(marblesToClear, collapseMoveTime);
+            // Refill empty space from collapsed columns
+            yield return StartCoroutine(boardFiller.RefillRoutine());
 
             // Wait while these Marbles fill in the gaps
             while (!boardQuery.IsCollapsed(movingMarbles))
@@ -319,7 +326,7 @@ public class Board : MonoBehaviour
             else
             {
                 yield return new WaitForSeconds(m_delay);
-                yield return StartCoroutine(ClearAndCollapseRoutine(matches));
+                yield return StartCoroutine(ClearAndProcessRoutine(matches));
             }
         }
     }

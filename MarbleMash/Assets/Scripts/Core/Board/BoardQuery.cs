@@ -234,16 +234,13 @@ public class BoardQuery : MonoBehaviour
         return true;
     }
 
-    public bool HasMatchOnFill(int x, int y, int minLength = 3)
+    public bool HasMatch(int x, int y, int minLength = 3)
     {
-        // Find matches to the left
-        List<Marble> leftMatches = m_board.boardMatcher.FindMatches(x, y, new Vector2(-1, 0), minLength);
-        // Find matches downward
-        List<Marble> downwardMatches = m_board.boardMatcher.FindMatches(x, y, new Vector2(0, -1), minLength);
+        // Find matches at given (x,y)
+        List<Marble> matches = m_board.boardMatcher.FindMatchesAt(x, y, minLength);
 
         // Return whether matches were found
-        return (leftMatches.Count > 0 || downwardMatches.Count > 0);
-
+        return (matches.Count > 0);
     }
 
     public List<Blocker> FindBlockersAt(int row, bool clearedAtBottomOnly = false)
