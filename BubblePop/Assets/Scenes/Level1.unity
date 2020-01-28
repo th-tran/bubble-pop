@@ -766,8 +766,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bb0344538858e84e87d245022eae5b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movesLeft: 10
-  scoreGoal: 500
+  movesLeft: 25
+  scoreGoal: 5000
   screenFader: {fileID: 1452129370}
   levelNameText: {fileID: 321917675}
   movesLeftText: {fileID: 1922844630}
@@ -849,6 +849,64 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1226997844}
   m_CullTransparentMesh: 0
+--- !u!1 &1362269842
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1362269843}
+  - component: {fileID: 1362269844}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1362269843
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1362269842}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1475528629}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1362269844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1362269842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb06c6c206a66e94caf9bb69f9215f44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicClips:
+  - {fileID: 8300000, guid: 9e5b83d5d9e243641b28f4ffe935512a, type: 3}
+  - {fileID: 8300000, guid: 803227e6878dd17468808fc4890c7fda, type: 3}
+  - {fileID: 8300000, guid: 07be54a8add2a084a931d7955ed04b3f, type: 3}
+  - {fileID: 8300000, guid: a3981966b2925264785e7e8f51d0ee8b, type: 3}
+  winClips:
+  - {fileID: 8300000, guid: 5f9fb0bfcf06e4304aab13b97645fe13, type: 3}
+  loseClips:
+  - {fileID: 8300000, guid: ed4ad50d33af142e6be4b65f4d37e37c, type: 3}
+  bonusClips:
+  - {fileID: 8300000, guid: 6d894f08d52a44322a56f6afc48f59e0, type: 3}
+  musicVolume: 0.5
+  fxVolume: 1
+  lowPitch: 0.95
+  highPitch: 1.05
 --- !u!1 &1385119675
 GameObject:
   m_ObjectHideFlags: 0
@@ -1451,6 +1509,7 @@ Transform:
   - {fileID: 518882167}
   - {fileID: 1385119676}
   - {fileID: 1070675077}
+  - {fileID: 1362269843}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

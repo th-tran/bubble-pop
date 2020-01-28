@@ -328,6 +328,13 @@ public class Board : MonoBehaviour
             else
             {
                 scoreMultiplier++;
+                if (scoreMultiplier >= 3)
+                {
+                    if (SoundManager.Instance != null)
+                    {
+                        SoundManager.Instance.PlayBonusSound();
+                    }
+                }
                 yield return new WaitForSeconds(m_delay);
                 yield return StartCoroutine(ClearAndProcessRoutine(matches));
             }
