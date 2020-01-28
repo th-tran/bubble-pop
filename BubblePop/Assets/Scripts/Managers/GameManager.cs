@@ -105,13 +105,14 @@ public class GameManager : Singleton<GameManager>
                     m_isGameOver = true;
                     m_isWinner = true;
                 }
+
+                if (movesLeft <= 0 && ScoreManager.Instance.CurrentScore < scoreGoal)
+                {
+                    m_isGameOver = true;
+                    m_isWinner = false;
+                }
             }
 
-            if (movesLeft <= 0)
-            {
-                m_isGameOver = true;
-                m_isWinner = false;
-            }
             yield return null;
         }
     }

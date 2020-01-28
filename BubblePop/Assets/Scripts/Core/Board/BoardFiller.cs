@@ -175,10 +175,17 @@ public class BoardFiller : MonoBehaviour
         bubble.SetCoordinates(x, y);
     }
 
-    public IEnumerator RefillRoutine()
+    public IEnumerator RefillRoutine(bool waitForFill = true)
     {
         m_board.boardFiller.FillBoard(m_board.fillYOffset, m_board.fillMoveTime);
 
-        yield return new WaitForSeconds(m_board.fillMoveTime);
+        if (waitForFill)
+        {
+            yield return new WaitForSeconds(m_board.fillMoveTime);
+        }
+        else
+        {
+            yield return null;
+        }
     }
 }

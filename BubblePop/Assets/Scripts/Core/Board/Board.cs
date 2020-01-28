@@ -305,7 +305,7 @@ public class Board : MonoBehaviour
             // Collapse any columns with empty spaces and keep track of what Bubbles moved as a result
             movingBubbles = boardCollapser.CollapseColumn(bubblesToClear, collapseMoveTime);
             // Refill empty space from collapsed columns
-            yield return StartCoroutine(boardFiller.RefillRoutine());
+            yield return StartCoroutine(boardFiller.RefillRoutine(false));
 
             // Wait while these Bubbles fill in the gaps
             while (!boardQuery.IsCollapsed(movingBubbles))
