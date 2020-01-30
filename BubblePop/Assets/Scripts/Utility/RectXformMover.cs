@@ -14,8 +14,7 @@ public class RectXformMover : MonoBehaviour
     RectTransform m_rectXform;
     bool m_isMoving = false;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         m_rectXform = GetComponent<RectTransform>();
     }

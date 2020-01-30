@@ -44,24 +44,9 @@ public class Bubble : MonoBehaviour
 
     public AudioClip clearSound;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         color = GetComponent<SpriteRenderer>().color;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            Move((int) transform.position.x + 1, (int) transform.position.y, 0.5f);
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            Move((int) transform.position.x - 1, (int) transform.position.y, 0.5f);
-        }
     }
 
     public void Init(Board board)
@@ -75,7 +60,7 @@ public class Bubble : MonoBehaviour
         yIndex = y;
     }
 
-    public void Move(int destX, int destY, float timeToMove)
+    public void Move(int destX, int destY, float timeToMove = 0.1f)
     {
         if (!m_isMoving)
         {
@@ -83,7 +68,7 @@ public class Bubble : MonoBehaviour
         }
     }
 
-    IEnumerator MoveRoutine(Vector3 destination, float timeToMove)
+    IEnumerator MoveRoutine(Vector3 destination, float timeToMove = 0.1f)
     {
         Vector3 startPosition = transform.position;
         bool reachedDestination = false;

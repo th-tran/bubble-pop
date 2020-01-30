@@ -18,6 +18,13 @@ public class GameManager : Singleton<GameManager>
     bool m_isReadyToBegin = false;
     bool m_isReadyToReload = false;
     bool m_isGameOver = false;
+    public bool IsGameOver
+    {
+        get
+        {
+            return m_isGameOver;
+        }
+    }
     bool m_isWinner = false;
 
     public MessageWindow messageWindow;
@@ -60,6 +67,7 @@ public class GameManager : Singleton<GameManager>
     {
         yield return StartCoroutine(StartGameRoutine());
         yield return StartCoroutine(PlayGameRoutine());
+        yield return StartCoroutine(WaitForBoardRoutine(0.5f));
         yield return StartCoroutine(EndGameRoutine());
     }
 
@@ -115,6 +123,19 @@ public class GameManager : Singleton<GameManager>
 
             yield return null;
         }
+    }
+
+    IEnumerator WaitForBoardRoutine(float delay = 0f)
+    {
+        if (m_board != null)
+        {
+            while (m_board.isRefilling)
+            {
+                yield return null;
+            }
+        }
+
+        yield return new WaitForSeconds(delay);
     }
 
     IEnumerator EndGameRoutine()

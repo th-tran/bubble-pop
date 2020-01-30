@@ -83,6 +83,8 @@ public class Board : MonoBehaviour
     public float fillMoveTime = 0.5f;
     public float collapseMoveTime = 0.1f;
 
+    public bool isRefilling = false;
+
     public int scoreMultiplier = 0;
 
     // References to Board components
@@ -128,7 +130,7 @@ public class Board : MonoBehaviour
     IEnumerator SwitchTilesRoutine(Tile clickedTile, Tile targetTile)
     {
         // If player input is enabled...
-        if (playerInputEnabled)
+        if (playerInputEnabled && !GameManager.Instance.IsGameOver)
         {
             // ...set the corresponding Bubbles to the clicked Tile and target Tile
             Bubble clickedBubble = allBubbles[clickedTile.xIndex, clickedTile.yIndex];
@@ -224,15 +226,17 @@ public class Board : MonoBehaviour
     {
         // Disable player input while the Board is collapsing/refilling
         playerInputEnabled = false;
+        isRefilling = true;
 
         // Create a new List of Bubbles, using the initial list as a starting point
         List<Bubble> matches = bubbles;
         do
         {
             scoreMultiplier = 1;
-            // Run the coroutine to clear the Board, collapse any columns to fill in the spaces
-            // and refill empty spaces from collapsing
+            // Run the coroutine to clear the Board and collapse any columns to fill in the spaces
             yield return StartCoroutine(ClearAndProcessRoutine(matches));
+            // Refill empty spaces from collapsing
+            yield return StartCoroutine(boardFiller.RefillRoutine());
             // Find any subsequent matches and repeat the process
             matches = boardMatcher.FindAllMatches();
             if (matches.Count > 0)
@@ -244,6 +248,7 @@ public class Board : MonoBehaviour
 
         // Re-enable player input
         playerInputEnabled = true;
+        isRefilling = false;
     }
 
     IEnumerator ClearAndProcessRoutine(List<Bubble> bubblesToClear)
@@ -304,8 +309,6 @@ public class Board : MonoBehaviour
 
             // Collapse any columns with empty spaces and keep track of what Bubbles moved as a result
             movingBubbles = boardCollapser.CollapseColumn(bubblesToClear, collapseMoveTime);
-            // Refill empty space from collapsed columns
-            yield return StartCoroutine(boardFiller.RefillRoutine(false));
 
             // Wait while these Bubbles fill in the gaps
             while (!boardQuery.IsCollapsed(movingBubbles))
@@ -335,7 +338,6 @@ public class Board : MonoBehaviour
                         SoundManager.Instance.PlayBonusSound();
                     }
                 }
-                yield return new WaitForSeconds(m_delay);
                 yield return StartCoroutine(ClearAndProcessRoutine(matches));
             }
         }
