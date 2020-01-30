@@ -287,6 +287,8 @@ public class Board : MonoBehaviour
 
             bubblesToClear = bubblesToClear.Union(blockersToClear).ToList();
 
+            List<int> columnsToCollapse = boardQuery.GetColumns(bubblesToClear);
+
             // Clear the Bubbles
             boardClearer.ClearBubbleAt(bubblesToClear, bombedBubbles);
             // Break any Tiles under the cleared Bubbles
@@ -308,7 +310,7 @@ public class Board : MonoBehaviour
             yield return new WaitForSeconds(m_delay);
 
             // Collapse any columns with empty spaces and keep track of what Bubbles moved as a result
-            movingBubbles = boardCollapser.CollapseColumn(bubblesToClear, collapseMoveTime);
+            movingBubbles = boardCollapser.CollapseColumn(columnsToCollapse, collapseMoveTime);
 
             // Wait while these Bubbles fill in the gaps
             while (!boardQuery.IsCollapsed(movingBubbles))

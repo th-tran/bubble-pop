@@ -55,9 +55,12 @@ public class BoardQuery : MonoBehaviour
 
         foreach (Bubble bubble in bubbles)
         {
-            if (!columns.Contains(bubble.xIndex))
+            if (bubble != null)
             {
-                columns.Add(bubble.xIndex);
+                if (!columns.Contains(bubble.xIndex))
+                {
+                    columns.Add(bubble.xIndex);
+                }
             }
         }
 
