@@ -16,6 +16,7 @@ public class StartingObject
 [RequireComponent(typeof(BoardBomber))]
 [RequireComponent(typeof(BoardClearer))]
 [RequireComponent(typeof(BoardCollapser))]
+[RequireComponent(typeof(BoardDeadlock))]
 [RequireComponent(typeof(BoardFiller))]
 [RequireComponent(typeof(BoardHighlighter))]
 [RequireComponent(typeof(BoardInput))]
@@ -91,6 +92,7 @@ public class Board : MonoBehaviour
     public BoardBomber boardBomber;
     public BoardClearer boardClearer;
     public BoardCollapser boardCollapser;
+    public BoardDeadlock boardDeadlock;
     public BoardFiller boardFiller;
     public BoardHighlighter boardHighlighter;
     public BoardInput boardInput;
@@ -104,6 +106,7 @@ public class Board : MonoBehaviour
         boardBomber = GetComponent<BoardBomber>();
         boardClearer = GetComponent<BoardClearer>();
         boardCollapser = GetComponent<BoardCollapser>();
+        boardDeadlock = GetComponent<BoardDeadlock>();
         boardFiller = GetComponent<BoardFiller>();
         boardHighlighter = GetComponent<BoardHighlighter>();
         boardInput = GetComponent<BoardInput>();
@@ -245,6 +248,15 @@ public class Board : MonoBehaviour
             }
         }
         while (matches.Count != 0);
+
+        if (boardDeadlock.IsDeadlocked())
+        {
+            yield return new WaitForSeconds(3f);
+            boardClearer.ClearBoard();
+
+            yield return new WaitForSeconds(1f);
+            yield return StartCoroutine(boardFiller.RefillRoutine());
+        }
 
         // Re-enable player input
         playerInputEnabled = true;

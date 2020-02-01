@@ -748,8 +748,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bb0344538858e84e87d245022eae5b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movesLeft: 25
-  scoreGoal: 5000
+  movesLeft: 20
+  scoreGoal: 2000
   screenFader: {fileID: 1452129370}
   levelNameText: {fileID: 321917675}
   movesLeftText: {fileID: 1922844630}
@@ -945,6 +945,7 @@ GameObject:
   - component: {fileID: 1421813972}
   - component: {fileID: 1421813971}
   - component: {fileID: 1421813970}
+  - component: {fileID: 1421813973}
   - component: {fileID: 1421813969}
   - component: {fileID: 1421813968}
   - component: {fileID: 1421813967}
@@ -971,8 +972,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4abcf4eae24f300429662a2b91d8f450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 8
-  height: 9
+  width: 5
+  height: 5
   borderSize: 2
   tileNormalPrefab: {fileID: 520010591576032554, guid: c6066261de5bacf48b973a1dd3c43e50,
     type: 3}
@@ -1020,7 +1021,11 @@ MonoBehaviour:
   clickedTile: {fileID: 0}
   targetTile: {fileID: 0}
   playerInputEnabled: 1
-  startingTiles: []
+  startingTiles:
+  - prefab: {fileID: 877982029463913109, guid: 37cc377765bee294089d5bab86467964, type: 3}
+    x: 2
+    y: 2
+    z: 0
   startingBubbles: []
   fillYOffset: 10
   fillMoveTime: 0.5
@@ -1030,6 +1035,7 @@ MonoBehaviour:
   boardBomber: {fileID: 0}
   boardClearer: {fileID: 0}
   boardCollapser: {fileID: 0}
+  boardDeadlock: {fileID: 0}
   boardFiller: {fileID: 0}
   boardHighlighter: {fileID: 0}
   boardInput: {fileID: 0}
@@ -1169,6 +1175,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceafdf976f9bd8945bc2777c18aaaf85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1421813973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421813960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de96ffbc74ab3e04ba8fc54fedf68f1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1452129368
