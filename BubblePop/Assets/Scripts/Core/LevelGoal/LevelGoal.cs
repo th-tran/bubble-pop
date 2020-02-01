@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelGoal : Singleton<LevelGoal>
+public abstract class LevelGoal : Singleton<LevelGoal>
 {
     public int scoreStars = 0;
     public int[] scoreGoals = new int[3] { 1000, 2000, 3000 };
@@ -37,4 +37,7 @@ public class LevelGoal : Singleton<LevelGoal>
     {
         scoreStars = UpdateScore(score);
     }
+
+    public abstract bool IsWinner();
+    public abstract bool IsGame();
 }
