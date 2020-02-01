@@ -90,6 +90,43 @@ public class BoardFiller : MonoBehaviour
         }
     }
 
+    public void FillBoard(List<Bubble> bubbles)
+    {
+        if (m_board == null)
+        {
+            return;
+        }
+
+        Queue<Bubble> unusedBubbles = new Queue<Bubble>(bubbles);
+
+        int maxIterations = 100;
+        int iterations = 0;
+
+        for (int i = 0; i < m_board.width; i++)
+        {
+            for (int j = 0; j < m_board.height; j++)
+            {
+                if (m_board.allBubbles[i, j] == null && m_board.allTiles[i, j].tileType != TileType.Obstacle)
+                {
+                    m_board.allBubbles[i, j] = unusedBubbles.Dequeue();
+
+                    iterations = 0;
+                    while (m_board.boardQuery.HasMatch(i, j))
+                    {
+                        unusedBubbles.Enqueue(m_board.allBubbles[i, j]);
+                        m_board.allBubbles[i, j] = unusedBubbles.Dequeue();
+
+                        iterations++;
+                        if (iterations >= maxIterations)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void MakeTile(GameObject prefab, int x, int y, int z = 0)
     {
         if (m_board == null)

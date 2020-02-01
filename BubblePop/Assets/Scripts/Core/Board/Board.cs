@@ -23,6 +23,7 @@ public class StartingObject
 [RequireComponent(typeof(BoardMatcher))]
 [RequireComponent(typeof(BoardQuery))]
 [RequireComponent(typeof(BoardSetup))]
+[RequireComponent(typeof(BoardShuffler))]
 [RequireComponent(typeof(BoardTiles))]
 public class Board : MonoBehaviour
 {
@@ -57,6 +58,13 @@ public class Board : MonoBehaviour
 
     // The time required to swap Bubbles between the target and clicked Tile
     float m_swapTime = 0.5f;
+    public float SwapTime
+    {
+        get
+        {
+            return m_swapTime;
+        }
+    }
     // The base delay between events
     float m_delay = 0.2f;
 
@@ -99,6 +107,7 @@ public class Board : MonoBehaviour
     public BoardMatcher boardMatcher;
     public BoardQuery boardQuery;
     public BoardSetup boardSetup;
+    public BoardShuffler boardShuffler;
     public BoardTiles boardTiles;
 
     void Awake()
@@ -113,6 +122,7 @@ public class Board : MonoBehaviour
         boardMatcher = GetComponent<BoardMatcher>();
         boardQuery = GetComponent<BoardQuery>();
         boardSetup = GetComponent<BoardSetup>();
+        boardShuffler = GetComponent<BoardShuffler>();
         boardTiles = GetComponent<BoardTiles>();
     }
 
@@ -220,12 +230,12 @@ public class Board : MonoBehaviour
             }
         }
     }
-    void ClearAndRefillBoard(List<Bubble> bubbles)
+    public void ClearAndRefillBoard(List<Bubble> bubbles)
     {
         StartCoroutine(ClearAndRefillBoardRoutine(bubbles));
     }
 
-    IEnumerator ClearAndRefillBoardRoutine(List<Bubble> bubbles)
+    public IEnumerator ClearAndRefillBoardRoutine(List<Bubble> bubbles)
     {
         // Disable player input while the Board is collapsing/refilling
         playerInputEnabled = false;
@@ -251,11 +261,8 @@ public class Board : MonoBehaviour
 
         if (boardDeadlock.IsDeadlocked())
         {
-            yield return new WaitForSeconds(3f);
-            boardClearer.ClearBoard();
-
-            yield return new WaitForSeconds(1f);
-            yield return StartCoroutine(boardFiller.RefillRoutine());
+            yield return new WaitForSeconds(m_delay);
+            yield return StartCoroutine(boardShuffler.ShuffleBoardRoutine());
         }
 
         // Re-enable player input
