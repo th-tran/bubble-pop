@@ -765,7 +765,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1070675076}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c95864a4e0100c4880fe981145f39b6, type: 3}
+  m_Script: {fileID: 11500000, guid: f23578c015efc984291e1cdde3034d71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   scoreStars: 0
@@ -987,8 +987,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4abcf4eae24f300429662a2b91d8f450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 3
-  height: 5
+  width: 5
+  height: 6
   borderSize: 2
   tileNormalPrefab: {fileID: 520010591576032554, guid: c6066261de5bacf48b973a1dd3c43e50,
     type: 3}

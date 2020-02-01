@@ -139,17 +139,4 @@ public class Bubble : MonoBehaviour
             matchValue = bubbleToMatch.matchValue;
         }
     }
-
-    public void ScorePoints(int multiplier = 1, int bonus = 0)
-    {
-        if (ScoreManager.Instance != null)
-        {
-            ScoreManager.Instance.AddScore(scoreValue * multiplier + bonus);
-        }
-
-        if (SoundManager.Instance != null)
-        {
-            SoundManager.Instance.PlayClipAtPoint(clearSound, Vector3.zero, SoundManager.Instance.fxVolume, playAtRandomPitch: true);
-        }
-    }
 }

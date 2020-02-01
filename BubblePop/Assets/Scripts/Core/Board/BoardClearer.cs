@@ -50,7 +50,11 @@ public class BoardClearer : MonoBehaviour
                 {
                     bonus = 20;
                 }
-                bubble.ScorePoints(m_board.scoreMultiplier, bonus);
+
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.ScorePoints(bubble, m_board.scoreMultiplier, bonus);
+                }
 
                 if (ParticleManager.Instance != null)
                 {

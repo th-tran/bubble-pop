@@ -15,12 +15,12 @@ public abstract class LevelGoal : Singleton<LevelGoal>
         Init();
     }
 
-    public void Init()
+    void Init()
     {
         scoreStars = 0;
     }
 
-    public int UpdateScore(int score)
+    int UpdateScore(int score)
     {
         for (int i = 0; i < scoreGoals.Length; i++)
         {
@@ -39,5 +39,5 @@ public abstract class LevelGoal : Singleton<LevelGoal>
     }
 
     public abstract bool IsWinner();
-    public abstract bool IsGame();
+    public abstract bool IsGameOver();
 }

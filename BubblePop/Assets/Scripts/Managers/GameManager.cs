@@ -113,20 +113,9 @@ public class GameManager : Singleton<GameManager>
     {
         while (!m_isGameOver)
         {
-            if (ScoreManager.Instance != null)
-            {
-                if (ScoreManager.Instance.CurrentScore >= m_levelGoal.scoreGoals[0])
-                {
-                    m_isGameOver = true;
-                    m_isWinner = true;
-                }
+            m_isGameOver = m_levelGoal.IsGameOver();
 
-                if (m_levelGoal.movesLeft <= 0 && ScoreManager.Instance.CurrentScore < m_levelGoal.scoreGoals[0])
-                {
-                    m_isGameOver = true;
-                    m_isWinner = false;
-                }
-            }
+            m_isWinner = m_levelGoal.IsWinner();
 
             yield return null;
         }
@@ -194,5 +183,22 @@ public class GameManager : Singleton<GameManager>
     public void ReloadScene()
     {
         m_isReadyToReload = true;
+    }
+
+    public void ScorePoints(Bubble bubble, int multiplier = 1, int bonus = 0)
+    {
+        if (bubble != null)
+        {
+            if (ScoreManager.Instance != null)
+            {
+                ScoreManager.Instance.AddScore(bubble.scoreValue * multiplier + bonus);
+                m_levelGoal.UpdateScoreStars(ScoreManager.Instance.CurrentScore);
+
+                if (bubble.clearSound != null)
+                {
+                    SoundManager.Instance.PlayClipAtPoint(bubble.clearSound, Vector3.zero, SoundManager.Instance.fxVolume, playAtRandomPitch: true);
+                }
+            }
+        }
     }
 }
