@@ -4,11 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(LevelGoal))]
 public class GameManager : Singleton<GameManager>
 {
-    public int movesLeft = 10;
-    public int scoreGoal = 500;
-
     public ScreenFader screenFader;
     public Text levelNameText;
     public Text movesLeftText;
@@ -33,6 +31,15 @@ public class GameManager : Singleton<GameManager>
     public Sprite winIcon;
     public Sprite goalIcon;
 
+    LevelGoal m_levelGoal;
+
+    public override void Awake()
+    {
+        base.Awake();
+
+        m_levelGoal = GetComponent<LevelGoal>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -51,7 +58,7 @@ public class GameManager : Singleton<GameManager>
 
     public void DecrementMoves()
     {
-        movesLeft--;
+        m_levelGoal.movesLeft--;
         UpdateMoves();
     }
 
@@ -59,7 +66,7 @@ public class GameManager : Singleton<GameManager>
     {
         if (movesLeftText != null)
         {
-            movesLeftText.text = movesLeft.ToString();
+            movesLeftText.text = m_levelGoal.movesLeft.ToString();
         }
     }
 
@@ -81,7 +88,7 @@ public class GameManager : Singleton<GameManager>
         if (messageWindow != null)
         {
             messageWindow.GetComponent<RectXformMover>().MoveOn();
-            messageWindow.ShowMessage(goalIcon, "score goal\n" + scoreGoal.ToString(), "start");
+            messageWindow.ShowMessage(goalIcon, "score goal\n" + m_levelGoal.scoreGoals[0].ToString(), "start");
         }
 
         // Keep waiting until player is ready
@@ -108,13 +115,13 @@ public class GameManager : Singleton<GameManager>
         {
             if (ScoreManager.Instance != null)
             {
-                if (ScoreManager.Instance.CurrentScore >= scoreGoal)
+                if (ScoreManager.Instance.CurrentScore >= m_levelGoal.scoreGoals[0])
                 {
                     m_isGameOver = true;
                     m_isWinner = true;
                 }
 
-                if (movesLeft <= 0 && ScoreManager.Instance.CurrentScore < scoreGoal)
+                if (m_levelGoal.movesLeft <= 0 && ScoreManager.Instance.CurrentScore < m_levelGoal.scoreGoals[0])
                 {
                     m_isGameOver = true;
                     m_isWinner = false;
