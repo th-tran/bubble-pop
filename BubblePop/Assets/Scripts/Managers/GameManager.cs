@@ -31,6 +31,7 @@ public class GameManager : Singleton<GameManager>
     public Sprite winIcon;
     public Sprite goalIcon;
 
+    public ScoreMeter scoreMeter;
     LevelGoal m_levelGoal;
 
     public override void Awake()
@@ -38,12 +39,17 @@ public class GameManager : Singleton<GameManager>
         base.Awake();
 
         m_levelGoal = GetComponent<LevelGoal>();
+
+        m_board = GameObject.FindObjectOfType<Board>().GetComponent<Board>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        m_board = GameObject.FindObjectOfType<Board>().GetComponent<Board>();
+        if (scoreMeter != null)
+        {
+            scoreMeter.SetupStars(m_levelGoal);
+        }
 
         Scene scene = SceneManager.GetActiveScene();
 
@@ -193,6 +199,11 @@ public class GameManager : Singleton<GameManager>
             {
                 ScoreManager.Instance.AddScore(bubble.scoreValue * multiplier + bonus);
                 m_levelGoal.UpdateScoreStars(ScoreManager.Instance.CurrentScore);
+
+                if (scoreMeter != null)
+                {
+                    scoreMeter.UpdateScoreMeter(ScoreManager.Instance.CurrentScore, m_levelGoal.scoreStars);
+                }
 
                 if (bubble.clearSound != null)
                 {

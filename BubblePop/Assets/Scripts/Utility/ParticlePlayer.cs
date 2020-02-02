@@ -6,13 +6,17 @@ public class ParticlePlayer : MonoBehaviour
 {
     public ParticleSystem[] allParticles;
     public float lifetime = 1f;
+    public bool destroyImmediately = true;
 
     // Start is called before the first frame update
     void Start()
     {
         allParticles = GetComponentsInChildren<ParticleSystem>();
 
-        Destroy(gameObject, lifetime);
+        if (destroyImmediately)
+        {
+            Destroy(gameObject, lifetime);
+        }
     }
 
     public void Play()
@@ -22,5 +26,7 @@ public class ParticlePlayer : MonoBehaviour
             ps.Stop();
             ps.Play();
         }
+
+        Destroy(gameObject, lifetime);
     }
 }
