@@ -21,19 +21,24 @@ public class ScreenFader : MonoBehaviour
         m_graphic = GetComponent<MaskableGraphic>();
     }
 
-    public void FadeOn()
+    public void FadeOn(bool fadeChildren = true)
     {
         StartCoroutine(FadeRoutine(solidAlpha));
     }
 
-    public void FadeOff()
+    public void FadeOff(bool fadeChildren = true)
     {
         StartCoroutine(FadeRoutine(clearAlpha));
     }
 
-    IEnumerator FadeRoutine(float alpha)
+    IEnumerator FadeRoutine(float alpha, bool fadeChildren = true)
     {
         yield return new WaitForSeconds(delay);
         m_graphic.CrossFadeAlpha(alpha, timeToFade, true);
+        MaskableGraphic[] maskableGraphics = GetComponentsInChildren<MaskableGraphic>();
+        foreach (MaskableGraphic graphic in maskableGraphics)
+        {
+            graphic.CrossFadeAlpha(alpha, timeToFade, true);
+        }
     }
 }

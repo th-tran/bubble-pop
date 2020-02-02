@@ -24,7 +24,7 @@ public class SoundManager : Singleton<SoundManager>
         PlayMusic();
     }
 
-    public AudioSource PlayClipAtPoint(AudioClip clip, Vector3 position, float volume = 1f, bool playAtRandomPitch = false)
+    public AudioSource PlayClipAtPoint(AudioClip clip, Vector3 position, float volume = 1f, bool randomizePitch = false)
     {
         if (clip != null)
         {
@@ -34,7 +34,7 @@ public class SoundManager : Singleton<SoundManager>
             AudioSource audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.clip = clip;
 
-            if (playAtRandomPitch)
+            if (randomizePitch)
             {
                 float randomPitch = Random.Range(lowPitch, highPitch);
                 audioSource.pitch = randomPitch;
@@ -50,7 +50,7 @@ public class SoundManager : Singleton<SoundManager>
         return null;
     }
 
-    public AudioSource PlayRandom(AudioClip[] clips, Vector3 position, float volume = 1f, bool playAtRandomPitch = false)
+    public AudioSource PlayRandom(AudioClip[] clips, Vector3 position, float volume = 1f, bool randomizePitch = false)
     {
         if (clips != null)
         {
@@ -60,7 +60,7 @@ public class SoundManager : Singleton<SoundManager>
 
                 if (clips[randomIndex] != null)
                 {
-                    AudioSource audioSource = PlayClipAtPoint(clips[randomIndex], position, volume, playAtRandomPitch);
+                    AudioSource audioSource = PlayClipAtPoint(clips[randomIndex], position, volume, randomizePitch);
                     return audioSource;
                 }
             }

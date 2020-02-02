@@ -147,6 +147,15 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator WaitForBoardRoutine(float delay = 0f)
     {
+        if (m_levelGoalTimed != null)
+        {
+            if (m_levelGoalTimed.timer != null)
+            {
+                m_levelGoalTimed.timer.FadeOff();
+                m_levelGoalTimed.timer.paused = true;
+            }
+        }
+
         if (m_board != null)
         {
             while (m_board.isRefilling)
@@ -225,7 +234,7 @@ public class GameManager : Singleton<GameManager>
 
                 if (bubble.clearSound != null)
                 {
-                    SoundManager.Instance.PlayClipAtPoint(bubble.clearSound, Vector3.zero, SoundManager.Instance.fxVolume, playAtRandomPitch: true);
+                    SoundManager.Instance.PlayClipAtPoint(bubble.clearSound, Vector3.zero, SoundManager.Instance.fxVolume, randomizePitch: true);
                 }
             }
         }

@@ -449,6 +449,7 @@ GameObject:
   - component: {fileID: 230847914}
   - component: {fileID: 230847915}
   - component: {fileID: 230847916}
+  - component: {fileID: 230847917}
   m_Layer: 5
   m_Name: TimeLeftText
   m_TagString: Untagged
@@ -518,6 +519,22 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 60
+--- !u!114 &230847917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 230847913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f39ed2ca01caa6b499d92cc44cde7808, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  solidAlpha: 1
+  clearAlpha: 0
+  delay: 0
+  timeToFade: 1
 --- !u!1 &316598761
 GameObject:
   m_ObjectHideFlags: 0
@@ -1118,6 +1135,10 @@ MonoBehaviour:
   timeLeftText: {fileID: 230847916}
   clockImage: {fileID: 1639004120}
   paused: 0
+  flashTimeLimit: 10
+  flashBeep: {fileID: 8300000, guid: 3235eb35ca4de45b9901ea9ccbff8d77, type: 3}
+  flashInterval: 1
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!224 &565635757
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1611,9 +1632,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreStars: 0
-  scoreGoals: e8030000d0070000b80b0000
+  scoreGoals: 64000000c80000002c010000
   movesLeft: 10
-  timeLeft: 60
+  timeLeft: 15
   timer: {fileID: 565635756}
 --- !u!1 &1226997844
 GameObject:
@@ -2934,8 +2955,9 @@ GameObject:
   - component: {fileID: 1977749360}
   - component: {fileID: 1977749362}
   - component: {fileID: 1977749361}
+  - component: {fileID: 1977749363}
   m_Layer: 5
-  m_Name: ClockBackground
+  m_Name: Clock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2998,6 +3020,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1977749359}
   m_CullTransparentMesh: 0
+--- !u!114 &1977749363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977749359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f39ed2ca01caa6b499d92cc44cde7808, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  solidAlpha: 1
+  clearAlpha: 0
+  delay: 0
+  timeToFade: 1
 --- !u!1 &2024279108
 GameObject:
   m_ObjectHideFlags: 0

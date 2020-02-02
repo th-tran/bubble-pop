@@ -16,6 +16,6 @@ public class LevelGoalScored : LevelGoal
 
     public override bool IsGameOver()
     {
-        return (movesLeft <= 0);
+        return (movesLeft <= 0 || scoreStars >= scoreGoals.Length);
     }
 }

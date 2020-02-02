@@ -46,6 +46,6 @@ public class LevelGoalTimed : LevelGoal
 
     public override bool IsGameOver()
     {
-        return (timeLeft <= 0);
+        return (timeLeft <= 0 || scoreStars >= scoreGoals.Length);
     }
 }
