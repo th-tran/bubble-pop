@@ -7,6 +7,7 @@ public abstract class LevelGoal : Singleton<LevelGoal>
     public int scoreStars = 0;
     public int[] scoreGoals = new int[3] { 1000, 2000, 3000 };
     public int movesLeft = 10;
+    public int timeLeft = 60;
 
     public override void Awake()
     {

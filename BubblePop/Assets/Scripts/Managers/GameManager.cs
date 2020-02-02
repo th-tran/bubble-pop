@@ -33,12 +33,14 @@ public class GameManager : Singleton<GameManager>
 
     public ScoreMeter scoreMeter;
     LevelGoal m_levelGoal;
+    LevelGoalTimed m_levelGoalTimed;
 
     public override void Awake()
     {
         base.Awake();
 
         m_levelGoal = GetComponent<LevelGoal>();
+        m_levelGoalTimed = GetComponent<LevelGoalTimed>();
 
         m_board = GameObject.FindObjectOfType<Board>().GetComponent<Board>();
     }
@@ -70,9 +72,20 @@ public class GameManager : Singleton<GameManager>
 
     public void UpdateMoves()
     {
-        if (movesLeftText != null)
+        if (m_levelGoalTimed == null)
         {
-            movesLeftText.text = m_levelGoal.movesLeft.ToString();
+            if (movesLeftText != null)
+            {
+                movesLeftText.text = m_levelGoal.movesLeft.ToString();
+            }
+        }
+        else
+        {
+            if (movesLeftText != null)
+            {
+                movesLeftText.text = "\u221E";
+                movesLeftText.fontSize = 70;
+            }
         }
     }
 
@@ -117,6 +130,11 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator PlayGameRoutine()
     {
+        if (m_levelGoalTimed != null)
+        {
+            m_levelGoalTimed.StartCountdown();
+        }
+
         while (!m_isGameOver)
         {
             m_isGameOver = m_levelGoal.IsGameOver();

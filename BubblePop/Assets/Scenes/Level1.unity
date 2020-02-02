@@ -1395,12 +1395,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1070675076}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f23578c015efc984291e1cdde3034d71, type: 3}
+  m_Script: {fileID: 11500000, guid: 648b755079927d54e9c8fb05395ef6ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   scoreStars: 0
-  scoreGoals: f4010000e8030000d0070000
+  scoreGoals: e8030000d0070000b80b0000
   movesLeft: 10
+  timeLeft: 60
 --- !u!1 &1226997844
 GameObject:
   m_ObjectHideFlags: 0
@@ -1617,8 +1618,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4abcf4eae24f300429662a2b91d8f450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 5
-  height: 6
+  width: 6
+  height: 7
   borderSize: 2
   tileNormalPrefab: {fileID: 520010591576032554, guid: c6066261de5bacf48b973a1dd3c43e50,
     type: 3}
