@@ -4,6 +4,17 @@ using UnityEngine;
 
 public class LevelGoalTimed : LevelGoal
 {
+    public Timer timer;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        if (timer != null)
+        {
+            timer.Init(timeLeft);
+        }
+    }
+
     public void StartCountdown()
     {
         StartCoroutine(CountdownRoutine());
@@ -15,6 +26,11 @@ public class LevelGoalTimed : LevelGoal
         {
             yield return new WaitForSeconds(1f);
             timeLeft--;
+
+            if (timer != null)
+            {
+                timer.UpdateTimer(timeLeft);
+            }
         }
     }
 
