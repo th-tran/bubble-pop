@@ -37,7 +37,7 @@ public class Timer : MonoBehaviour
 
     public void UpdateTimer(int currentTime)
     {
-        if (paused)
+        if (paused || currentTime < 0)
         {
             return;
         }

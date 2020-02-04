@@ -1632,9 +1632,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreStars: 0
-  scoreGoals: 64000000c80000002c010000
+  scoreGoals: e8030000d0070000b80b0000
   movesLeft: 10
-  timeLeft: 15
+  timeLeft: 60
   timer: {fileID: 565635756}
 --- !u!1 &1226997844
 GameObject:

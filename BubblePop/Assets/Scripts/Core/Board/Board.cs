@@ -223,6 +223,13 @@ public class Board : MonoBehaviour
                             targetBomb.ChangeColor(clickedBubble);
                         }
                     }
+
+                    // Add short pause if bomb was generated
+                    if (m_clickedTileBomb != null || m_targetTileBomb != null)
+                    {
+                        yield return new WaitForSeconds(m_delay * 0.5f);
+                    }
+
                     List<Bubble> bubblesToClear = clickedBubbleMatches.Union(targetBubbleMatches).ToList()
                                                                       .Union(colorMatches).ToList();
                     ClearAndRefillBoard(bubblesToClear);

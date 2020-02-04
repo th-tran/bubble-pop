@@ -22,7 +22,7 @@ public class LevelGoalTimed : LevelGoal
 
     IEnumerator CountdownRoutine()
     {
-        while (timeLeft > 0)
+        while (timeLeft >= 0)
         {
             yield return new WaitForSeconds(1f);
             timeLeft--;
@@ -46,6 +46,6 @@ public class LevelGoalTimed : LevelGoal
 
     public override bool IsGameOver()
     {
-        return (timeLeft <= 0 || scoreStars >= scoreGoals.Length);
+        return (timeLeft < 0 || scoreStars >= scoreGoals.Length);
     }
 }
