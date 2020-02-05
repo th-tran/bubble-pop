@@ -239,4 +239,12 @@ public class GameManager : Singleton<GameManager>
             }
         }
     }
+
+    public void AddTime(int timeValue)
+    {
+        if (m_levelGoalTimed != null)
+        {
+            m_levelGoalTimed.AddTime(timeValue);
+        }
+    }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class LevelGoalTimed : LevelGoal
 {
     public Timer timer;
+    int m_maxTime;
 
     // Start is called before the first frame update
     void Start()
@@ -13,6 +14,8 @@ public class LevelGoalTimed : LevelGoal
         {
             timer.Init(timeLeft);
         }
+
+        m_maxTime = timeLeft;
     }
 
     public void StartCountdown()
@@ -47,5 +50,16 @@ public class LevelGoalTimed : LevelGoal
     public override bool IsGameOver()
     {
         return (timeLeft < 0 || scoreStars >= scoreGoals.Length);
+    }
+
+    public void AddTime(int timeValue)
+    {
+        timeLeft += timeValue;
+        timeLeft = Mathf.Clamp(timeLeft, 0, m_maxTime);
+
+        if (timer != null)
+        {
+            timer.UpdateTimer(timeLeft);
+        }
     }
 }

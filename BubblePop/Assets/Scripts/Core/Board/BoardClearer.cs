@@ -54,6 +54,13 @@ public class BoardClearer : MonoBehaviour
                 if (GameManager.Instance != null)
                 {
                     GameManager.Instance.ScorePoints(bubble, m_board.scoreMultiplier, bonus);
+
+                    TimeBonus timeBonus = bubble.GetComponent<TimeBonus>();
+
+                    if (timeBonus != null)
+                    {
+                        GameManager.Instance.AddTime(timeBonus.bonusValue);
+                    }
                 }
 
                 if (ParticleManager.Instance != null)
