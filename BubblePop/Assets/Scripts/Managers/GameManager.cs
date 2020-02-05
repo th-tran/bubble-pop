@@ -34,6 +34,13 @@ public class GameManager : Singleton<GameManager>
     public ScoreMeter scoreMeter;
     LevelGoal m_levelGoal;
     LevelGoalTimed m_levelGoalTimed;
+    public LevelGoalTimed LevelGoalTimed
+    {
+        get
+        {
+            return m_levelGoalTimed;
+        }
+    }
 
     public override void Awake()
     {
