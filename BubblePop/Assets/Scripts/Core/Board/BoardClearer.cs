@@ -61,6 +61,8 @@ public class BoardClearer : MonoBehaviour
                     {
                         GameManager.Instance.AddTime(timeBonus.bonusValue);
                     }
+
+                    GameManager.Instance.UpdateCollectionGoals(bubble);
                 }
 
                 if (ParticleManager.Instance != null)

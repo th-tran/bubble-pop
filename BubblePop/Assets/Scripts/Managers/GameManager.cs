@@ -41,6 +41,7 @@ public class GameManager : Singleton<GameManager>
             return m_levelGoalTimed;
         }
     }
+    LevelGoalCollected m_levelGoalCollected;
 
     public override void Awake()
     {
@@ -48,6 +49,7 @@ public class GameManager : Singleton<GameManager>
 
         m_levelGoal = GetComponent<LevelGoal>();
         m_levelGoalTimed = GetComponent<LevelGoalTimed>();
+        m_levelGoalCollected = GetComponent<LevelGoalCollected>();
 
         m_board = GameObject.FindObjectOfType<Board>().GetComponent<Board>();
     }
@@ -252,6 +254,14 @@ public class GameManager : Singleton<GameManager>
         if (m_levelGoalTimed != null)
         {
             m_levelGoalTimed.AddTime(timeValue);
+        }
+    }
+
+    public void UpdateCollectionGoals(Bubble bubbleToCheck)
+    {
+        if (m_levelGoalCollected != null)
+        {
+            m_levelGoalCollected.UpdateGoals(bubbleToCheck);
         }
     }
 }
