@@ -92,7 +92,7 @@ public class Board : MonoBehaviour
     public float fillMoveTime = 0.5f;
     public float collapseMoveTime = 0.1f;
 
-    public bool isRefilling = false;
+    public bool isBusy = false;
 
     public int scoreMultiplier = 0;
 
@@ -151,6 +151,8 @@ public class Board : MonoBehaviour
 
             if (clickedBubble != null && targetBubble != null)
             {
+                isBusy = true;
+
                 // Move the clicked Bubble to the target Bubble and vice versa
                 clickedBubble.Move(targetTile.xIndex, targetTile.yIndex, m_swapTime);
                 targetBubble.Move(clickedTile.xIndex, clickedTile.yIndex, m_swapTime);
@@ -232,7 +234,9 @@ public class Board : MonoBehaviour
 
                     List<Bubble> bubblesToClear = clickedBubbleMatches.Union(targetBubbleMatches).ToList()
                                                                       .Union(colorMatches).ToList();
-                    ClearAndRefillBoard(bubblesToClear);
+                    yield return StartCoroutine(ClearAndRefillBoardRoutine(bubblesToClear));
+
+                    isBusy = false;
                 }
             }
         }
@@ -246,7 +250,6 @@ public class Board : MonoBehaviour
     {
         // Disable player input while the Board is collapsing/refilling
         playerInputEnabled = false;
-        isRefilling = true;
 
         // Create a new List of Bubbles, using the initial list as a starting point
         List<Bubble> matches = bubbles;
@@ -274,7 +277,6 @@ public class Board : MonoBehaviour
 
         // Re-enable player input
         playerInputEnabled = true;
-        isRefilling = false;
     }
 
     IEnumerator ClearAndProcessRoutine(List<Bubble> bubblesToClear)

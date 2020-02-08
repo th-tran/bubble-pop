@@ -102,7 +102,6 @@ public class GameManager : Singleton<GameManager>
     {
         yield return StartCoroutine(StartGameRoutine());
         yield return StartCoroutine(PlayGameRoutine());
-        yield return StartCoroutine(WaitForBoardRoutine(0.5f));
         yield return StartCoroutine(EndGameRoutine());
     }
 
@@ -148,10 +147,12 @@ public class GameManager : Singleton<GameManager>
         {
             m_isGameOver = m_levelGoal.IsGameOver();
 
-            m_isWinner = m_levelGoal.IsWinner();
-
             yield return null;
         }
+
+        yield return StartCoroutine(WaitForBoardRoutine(0.5f));
+
+        m_isWinner = m_levelGoal.IsWinner();
     }
 
     IEnumerator WaitForBoardRoutine(float delay = 0f)
@@ -167,7 +168,7 @@ public class GameManager : Singleton<GameManager>
 
         if (m_board != null)
         {
-            while (m_board.isRefilling)
+            while (m_board.isBusy)
             {
                 yield return null;
             }
