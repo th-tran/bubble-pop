@@ -1,18 +1,43 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
 {
-    public RectTransform collectionGoalLayout;
+    public ScreenFader screenFader;
+    public Text levelNameText;
+    public Text movesLeftText;
+
+    public ScoreMeter scoreMeter;
+
+    public MessageWindow messageWindow;
+
+    public GameObject collectionGoalLayout;
     public int collectionGoalBaseWidth = 125;
     CollectionGoalPanel[] m_collectionGoalPanels;
+
+    public override void Awake()
+    {
+        base.Awake();
+
+        if (messageWindow != null)
+        {
+            messageWindow.gameObject.SetActive(true);
+        }
+
+        if (screenFader != null)
+        {
+            screenFader.gameObject.SetActive(true);
+        }
+    }
 
     public void SetupCollectionGoalLayout(CollectionGoal[] collectionGoals)
     {
         if (collectionGoalLayout != null && collectionGoals != null && collectionGoals.Length != 0)
         {
-            collectionGoalLayout.sizeDelta = new Vector2(collectionGoals.Length * collectionGoalBaseWidth, collectionGoalLayout.sizeDelta.y);
+            RectTransform rectXform = collectionGoalLayout.GetComponent<RectTransform>();
+            rectXform.sizeDelta = new Vector2(collectionGoals.Length * collectionGoalBaseWidth, rectXform.sizeDelta.y);
             m_collectionGoalPanels = collectionGoalLayout.gameObject.GetComponentsInChildren<CollectionGoalPanel>();
 
             for (int i = 0; i < m_collectionGoalPanels.Length; i++)

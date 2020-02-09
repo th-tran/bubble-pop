@@ -1,16 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(LevelGoal))]
 public class GameManager : Singleton<GameManager>
 {
-    public ScreenFader screenFader;
-    public Text levelNameText;
-    public Text movesLeftText;
-
     Board m_board;
 
     bool m_isReadyToBegin = false;
@@ -25,13 +20,10 @@ public class GameManager : Singleton<GameManager>
     }
     bool m_isWinner = false;
 
-    public MessageWindow messageWindow;
-
     public Sprite loseIcon;
     public Sprite winIcon;
     public Sprite goalIcon;
 
-    public ScoreMeter scoreMeter;
     LevelGoal m_levelGoal;
     LevelGoalTimed m_levelGoalTimed;
     public LevelGoalTimed LevelGoalTimed
@@ -57,21 +49,23 @@ public class GameManager : Singleton<GameManager>
     // Start is called before the first frame update
     void Start()
     {
-        if (scoreMeter != null)
+        if (UIManager.Instance != null)
         {
-            scoreMeter.SetupStars(m_levelGoal);
+            if (UIManager.Instance.scoreMeter != null)
+            {
+                UIManager.Instance.scoreMeter.SetupStars(m_levelGoal);
+            }
+
+            if (UIManager.Instance.levelNameText != null)
+            {
+                Scene scene = SceneManager.GetActiveScene();
+                UIManager.Instance.levelNameText.text = scene.name;
+            }
         }
 
         if (m_levelGoalCollected != null && UIManager.Instance != null)
         {
             UIManager.Instance.SetupCollectionGoalLayout(m_levelGoalCollected.collectionGoals);
-        }
-
-        Scene scene = SceneManager.GetActiveScene();
-
-        if (levelNameText != null)
-        {
-            levelNameText.text = scene.name;
         }
         UpdateMoves();
 
@@ -88,17 +82,9 @@ public class GameManager : Singleton<GameManager>
     {
         if (m_levelGoalTimed == null)
         {
-            if (movesLeftText != null)
+            if (UIManager.Instance != null && UIManager.Instance.movesLeftText != null)
             {
-                movesLeftText.text = m_levelGoal.movesLeft.ToString();
-            }
-        }
-        else
-        {
-            if (movesLeftText != null)
-            {
-                movesLeftText.text = "\u221E";
-                movesLeftText.fontSize = 70;
+                UIManager.Instance.movesLeftText.text = m_levelGoal.movesLeft.ToString();
             }
         }
     }
@@ -117,10 +103,13 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator StartGameRoutine()
     {
-        if (messageWindow != null)
+        if (UIManager.Instance != null)
         {
-            messageWindow.GetComponent<RectXformMover>().MoveOn();
-            messageWindow.ShowMessage(goalIcon, "score goal\n" + m_levelGoal.scoreGoals[0].ToString(), "start");
+            if (UIManager.Instance.messageWindow != null)
+            {
+                UIManager.Instance.messageWindow.GetComponent<RectXformMover>().MoveOn();
+                UIManager.Instance.messageWindow.ShowMessage(goalIcon, "score goal\n" + m_levelGoal.scoreGoals[0].ToString(), "start");
+            }
         }
 
         // Keep waiting until player is ready
@@ -129,9 +118,9 @@ public class GameManager : Singleton<GameManager>
             yield return null;
         }
 
-        if (screenFader != null)
+        if (UIManager.Instance != null && UIManager.Instance.screenFader != null)
         {
-            screenFader.FadeOff();
+            UIManager.Instance.screenFader.FadeOff();
         }
 
         yield return new WaitForSeconds(0.5f);
@@ -188,10 +177,10 @@ public class GameManager : Singleton<GameManager>
 
         if (m_isWinner)
         {
-            if (messageWindow != null)
+            if (UIManager.Instance != null && UIManager.Instance.messageWindow != null)
             {
-                messageWindow.GetComponent<RectXformMover>().MoveOn();
-                messageWindow.ShowMessage(winIcon, "YOU WIN!", "OK");
+                UIManager.Instance.messageWindow.GetComponent<RectXformMover>().MoveOn();
+                UIManager.Instance.messageWindow.ShowMessage(winIcon, "YOU WIN!", "OK");
             }
 
             if (SoundManager.Instance != null)
@@ -201,10 +190,10 @@ public class GameManager : Singleton<GameManager>
         }
         else
         {
-            if (messageWindow != null)
+            if (UIManager.Instance != null && UIManager.Instance.messageWindow != null)
             {
-                messageWindow.GetComponent<RectXformMover>().MoveOn();
-                messageWindow.ShowMessage(loseIcon, "YOU LOSE!", "OK");
+                UIManager.Instance.messageWindow.GetComponent<RectXformMover>().MoveOn();
+                UIManager.Instance.messageWindow.ShowMessage(loseIcon, "YOU LOSE!", "OK");
             }
 
             if (SoundManager.Instance != null)
@@ -214,9 +203,9 @@ public class GameManager : Singleton<GameManager>
         }
 
         yield return new WaitForSeconds(1f);
-        if (screenFader != null)
+        if (UIManager.Instance != null && UIManager.Instance.screenFader != null)
         {
-            screenFader.FadeOn();
+            UIManager.Instance.screenFader.FadeOn();
         }
 
         while (!m_isReadyToReload)
@@ -242,9 +231,9 @@ public class GameManager : Singleton<GameManager>
                 ScoreManager.Instance.AddScore(bubble.scoreValue * multiplier + bonus);
                 m_levelGoal.UpdateScoreStars(ScoreManager.Instance.CurrentScore);
 
-                if (scoreMeter != null)
+                if (UIManager.Instance != null && UIManager.Instance.scoreMeter != null)
                 {
-                    scoreMeter.UpdateScoreMeter(ScoreManager.Instance.CurrentScore, m_levelGoal.scoreStars);
+                    UIManager.Instance.scoreMeter.UpdateScoreMeter(ScoreManager.Instance.CurrentScore, m_levelGoal.scoreStars);
                 }
 
                 if (bubble.clearSound != null)
