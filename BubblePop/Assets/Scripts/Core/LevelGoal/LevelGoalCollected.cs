@@ -5,6 +5,7 @@ using UnityEngine;
 public class LevelGoalCollected : LevelGoal
 {
     public CollectionGoal[] collectionGoals;
+    public CollectionGoalPanel[] uiPanels;
 
     public void UpdateGoals(Bubble bubbleToCheck)
     {
@@ -16,6 +17,19 @@ public class LevelGoalCollected : LevelGoal
                 {
                     goal.CollectBubble(bubbleToCheck);
                 }
+            }
+        }
+
+        UpdateUI();
+    }
+
+    public void UpdateUI()
+    {
+        foreach (CollectionGoalPanel panel in uiPanels)
+        {
+            if (panel != null)
+            {
+                panel.UpdatePanel();
             }
         }
     }
