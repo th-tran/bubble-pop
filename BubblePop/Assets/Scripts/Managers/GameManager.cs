@@ -25,12 +25,11 @@ public class GameManager : Singleton<GameManager>
     public Sprite goalIcon;
 
     LevelGoal m_levelGoal;
-    LevelGoalTimed m_levelGoalTimed;
-    public LevelGoalTimed LevelGoalTimed
+    public LevelGoal LevelGoal
     {
         get
         {
-            return m_levelGoalTimed;
+            return m_levelGoal;
         }
     }
     LevelGoalCollected m_levelGoalCollected;
@@ -40,7 +39,6 @@ public class GameManager : Singleton<GameManager>
         base.Awake();
 
         m_levelGoal = GetComponent<LevelGoal>();
-        m_levelGoalTimed = GetComponent<LevelGoalTimed>();
         m_levelGoalCollected = GetComponent<LevelGoalCollected>();
 
         m_board = GameObject.FindObjectOfType<Board>().GetComponent<Board>();
@@ -61,12 +59,22 @@ public class GameManager : Singleton<GameManager>
                 Scene scene = SceneManager.GetActiveScene();
                 UIManager.Instance.levelNameText.text = scene.name;
             }
+
+            if (m_levelGoalCollected != null)
+            {
+                UIManager.Instance.EnableCollectionGoalLayout(true);
+                UIManager.Instance.SetupCollectionGoalLayout(m_levelGoalCollected.collectionGoals);
+            }
+            else
+            {
+                UIManager.Instance.EnableCollectionGoalLayout(false);
+            }
+
+            bool useTimer = (m_levelGoal.levelCounter == LevelCounter.Timer);
+            UIManager.Instance.EnableTimer(useTimer);
+            UIManager.Instance.EnableMovesCounter(!useTimer);
         }
 
-        if (m_levelGoalCollected != null && UIManager.Instance != null)
-        {
-            UIManager.Instance.SetupCollectionGoalLayout(m_levelGoalCollected.collectionGoals);
-        }
         UpdateMoves();
 
         StartCoroutine(ExecuteGameLoop());
@@ -80,7 +88,7 @@ public class GameManager : Singleton<GameManager>
 
     public void UpdateMoves()
     {
-        if (m_levelGoalTimed == null)
+        if (m_levelGoal.levelCounter == LevelCounter.Moves)
         {
             if (UIManager.Instance != null && UIManager.Instance.movesLeftText != null)
             {
@@ -132,9 +140,9 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator PlayGameRoutine()
     {
-        if (m_levelGoalTimed != null)
+        if (m_levelGoal.levelCounter == LevelCounter.Timer)
         {
-            m_levelGoalTimed.StartCountdown();
+            m_levelGoal.StartCountdown();
         }
 
         while (!m_isGameOver)
@@ -151,12 +159,12 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator WaitForBoardRoutine(float delay = 0f)
     {
-        if (m_levelGoalTimed != null)
+        if (m_levelGoal.levelCounter == LevelCounter.Timer)
         {
-            if (m_levelGoalTimed.timer != null)
+            if (UIManager.Instance != null && UIManager.Instance.timer != null)
             {
-                m_levelGoalTimed.timer.FadeOff();
-                m_levelGoalTimed.timer.paused = true;
+                UIManager.Instance.timer.FadeOff();
+                UIManager.Instance.timer.paused = true;
             }
         }
 
@@ -246,9 +254,9 @@ public class GameManager : Singleton<GameManager>
 
     public void AddTime(int timeValue)
     {
-        if (m_levelGoalTimed != null)
+        if (m_levelGoal.levelCounter == LevelCounter.Timer)
         {
-            m_levelGoalTimed.AddTime(timeValue);
+            m_levelGoal.AddTime(timeValue);
         }
     }
 

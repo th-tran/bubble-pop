@@ -13,6 +13,10 @@ public class UIManager : Singleton<UIManager>
 
     public MessageWindow messageWindow;
 
+    public GameObject movesCounter;
+
+    public Timer timer;
+
     public GameObject collectionGoalLayout;
     public int collectionGoalBaseWidth = 125;
     CollectionGoalPanel[] m_collectionGoalPanels;
@@ -64,6 +68,30 @@ public class UIManager : Singleton<UIManager>
             {
                 panel.UpdatePanel();
             }
+        }
+    }
+
+    public void EnableTimer(bool state)
+    {
+        if (timer != null)
+        {
+            timer.gameObject.SetActive(state);
+        }
+    }
+
+    public void EnableMovesCounter(bool state)
+    {
+        if (movesCounter != null)
+        {
+            movesCounter.SetActive(state);
+        }
+    }
+
+    public void EnableCollectionGoalLayout(bool state)
+    {
+        if (collectionGoalLayout != null)
+        {
+            collectionGoalLayout.SetActive(state);
         }
     }
 }

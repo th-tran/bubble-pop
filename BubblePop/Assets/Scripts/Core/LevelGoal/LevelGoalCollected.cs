@@ -63,7 +63,14 @@ public class LevelGoalCollected : LevelGoal
             }
         }
 
-        return (movesLeft <= 0);
+        if (levelCounter == LevelCounter.Timer)
+        {
+            return (timeLeft < 0);
+        }
+        else
+        {
+            return (movesLeft <= 0);
+        }
     }
 
     public override bool IsWinner()

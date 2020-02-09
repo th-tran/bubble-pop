@@ -4,36 +4,15 @@ using UnityEngine;
 
 public class LevelGoalTimed : LevelGoal
 {
-    public Timer timer;
-    int m_maxTime;
-
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
-        if (timer != null)
+        levelCounter = LevelCounter.Timer;
+        base.Start();
+
+        if (UIManager.Instance != null && UIManager.Instance.timer != null)
         {
-            timer.Init(timeLeft);
-        }
-
-        m_maxTime = timeLeft;
-    }
-
-    public void StartCountdown()
-    {
-        StartCoroutine(CountdownRoutine());
-    }
-
-    IEnumerator CountdownRoutine()
-    {
-        while (timeLeft >= 0)
-        {
-            yield return new WaitForSeconds(1f);
-            timeLeft--;
-
-            if (timer != null)
-            {
-                timer.UpdateTimer(timeLeft);
-            }
+            UIManager.Instance.timer.Init(timeLeft);
         }
     }
 
@@ -50,16 +29,5 @@ public class LevelGoalTimed : LevelGoal
     public override bool IsGameOver()
     {
         return (timeLeft < 0 || scoreStars >= scoreGoals.Length);
-    }
-
-    public void AddTime(int timeValue)
-    {
-        timeLeft += timeValue;
-        timeLeft = Mathf.Clamp(timeLeft, 0, m_maxTime);
-
-        if (timer != null)
-        {
-            timer.UpdateTimer(timeLeft);
-        }
     }
 }
