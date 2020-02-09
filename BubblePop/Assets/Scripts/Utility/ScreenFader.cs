@@ -35,10 +35,14 @@ public class ScreenFader : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         m_graphic.CrossFadeAlpha(alpha, timeToFade, true);
-        MaskableGraphic[] maskableGraphics = GetComponentsInChildren<MaskableGraphic>();
-        foreach (MaskableGraphic graphic in maskableGraphics)
+
+        if (fadeChildren)
         {
-            graphic.CrossFadeAlpha(alpha, timeToFade, true);
+            MaskableGraphic[] maskableGraphics = GetComponentsInChildren<MaskableGraphic>();
+            foreach (MaskableGraphic graphic in maskableGraphics)
+            {
+                graphic.CrossFadeAlpha(alpha, timeToFade, true);
+            }
         }
     }
 }

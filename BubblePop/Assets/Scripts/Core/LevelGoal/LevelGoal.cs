@@ -18,6 +18,8 @@ public abstract class LevelGoal : Singleton<LevelGoal>
 
     public LevelCounter levelCounter = LevelCounter.Moves;
 
+    IEnumerator m_countdownRoutine;
+
     public virtual void Start()
     {
         Init();
@@ -30,6 +32,11 @@ public abstract class LevelGoal : Singleton<LevelGoal>
         if (levelCounter == LevelCounter.Timer)
         {
             m_maxTime = timeLeft;
+
+            if (UIManager.Instance != null && UIManager.Instance.timer != null)
+            {
+                UIManager.Instance.timer.Init(timeLeft);
+            }
         }
     }
 
@@ -53,7 +60,13 @@ public abstract class LevelGoal : Singleton<LevelGoal>
 
     public void StartCountdown()
     {
-        StartCoroutine(CountdownRoutine());
+        m_countdownRoutine = CountdownRoutine();
+        StartCoroutine(m_countdownRoutine);
+    }
+
+    public void StopCountdown()
+    {
+        StopCoroutine(m_countdownRoutine);
     }
 
     IEnumerator CountdownRoutine()

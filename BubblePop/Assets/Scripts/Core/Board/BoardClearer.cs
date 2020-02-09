@@ -57,7 +57,7 @@ public class BoardClearer : MonoBehaviour
 
                     TimeBonus timeBonus = bubble.GetComponent<TimeBonus>();
 
-                    if (timeBonus != null)
+                    if (timeBonus != null && timeBonus.bonusValue > 0)
                     {
                         GameManager.Instance.AddTime(timeBonus.bonusValue);
                     }

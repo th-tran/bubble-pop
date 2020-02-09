@@ -2518,14 +2518,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreStars: 0
-  scoreGoals: 64000000f4010000e8030000
+  scoreGoals: 14000000280000003c000000
   movesLeft: 10
-  timeLeft: 60
+  timeLeft: 12
   levelCounter: 0
   collectionGoals:
   - {fileID: 1169290747}
-  - {fileID: 155075121}
-  - {fileID: 693015443}
 --- !u!1 &1169290745
 GameObject:
   m_ObjectHideFlags: 0
@@ -2571,7 +2569,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabToCollect: {fileID: 114422994271260120, guid: 7471f6d24260942c499dd3fbbeccadc6,
     type: 3}
-  numberToCollect: 5
+  numberToCollect: 4
 --- !u!1 &1226799082
 GameObject:
   m_ObjectHideFlags: 0

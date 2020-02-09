@@ -152,6 +152,11 @@ public class GameManager : Singleton<GameManager>
             yield return null;
         }
 
+        if (m_levelGoal.levelCounter == LevelCounter.Timer)
+        {
+            m_levelGoal.StopCountdown();
+        }
+
         yield return StartCoroutine(WaitForBoardRoutine(0.5f));
 
         m_isWinner = m_levelGoal.IsWinner();
@@ -163,8 +168,8 @@ public class GameManager : Singleton<GameManager>
         {
             if (UIManager.Instance != null && UIManager.Instance.timer != null)
             {
-                UIManager.Instance.timer.FadeOff();
                 UIManager.Instance.timer.paused = true;
+                UIManager.Instance.timer.FadeOff();
             }
         }
 
