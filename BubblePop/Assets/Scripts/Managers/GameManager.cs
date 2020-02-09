@@ -62,6 +62,11 @@ public class GameManager : Singleton<GameManager>
             scoreMeter.SetupStars(m_levelGoal);
         }
 
+        if (m_levelGoalCollected != null && UIManager.Instance != null)
+        {
+            UIManager.Instance.SetupCollectionGoalLayout(m_levelGoalCollected.collectionGoals);
+        }
+
         Scene scene = SceneManager.GetActiveScene();
 
         if (levelNameText != null)
