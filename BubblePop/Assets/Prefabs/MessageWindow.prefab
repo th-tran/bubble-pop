@@ -249,7 +249,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3436659979834937068
 RectTransform:
   m_ObjectHideFlags: 0
@@ -292,7 +292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.50980395, g: 0.8117648, b: 0.8313726, a: 1}
+  m_Color: {r: 0, g: 0.6431373, b: 0.91372555, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -354,6 +354,9 @@ MonoBehaviour:
   messageIcon: {fileID: 3436659979575227603}
   messageText: {fileID: 3436659981129375940}
   buttonText: {fileID: 3436659979539608909}
+  winIcon: {fileID: 21300000, guid: 98a7b5a9fd40cde4abca1055908fb023, type: 3}
+  loseIcon: {fileID: 21300000, guid: 3ae98c2081effb341b297b271ee32516, type: 3}
+  goalIcon: {fileID: 21300000, guid: ddfea480fbaad6345b60f13204e6b1cf, type: 3}
 --- !u!1 &3436659979961078509
 GameObject:
   m_ObjectHideFlags: 0

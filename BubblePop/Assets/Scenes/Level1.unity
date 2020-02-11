@@ -2502,9 +2502,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bb0344538858e84e87d245022eae5b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loseIcon: {fileID: 21300000, guid: 3ae98c2081effb341b297b271ee32516, type: 3}
-  winIcon: {fileID: 21300000, guid: 98a7b5a9fd40cde4abca1055908fb023, type: 3}
-  goalIcon: {fileID: 21300000, guid: ddfea480fbaad6345b60f13204e6b1cf, type: 3}
 --- !u!114 &1070675079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5207,11 +5204,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MessageWindow
       objectReference: {fileID: 0}
-    - target: {fileID: 3436659979834937059, guid: 4ee03bb01f780724c9f817de09cf0ddb,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3436659979834937068, guid: 4ee03bb01f780724c9f817de09cf0ddb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5327,21 +5319,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
       objectReference: {fileID: 1070675078}
-    - target: {fileID: 3436659979834937070, guid: 4ee03bb01f780724c9f817de09cf0ddb,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3436659979834937070, guid: 4ee03bb01f780724c9f817de09cf0ddb,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 0.6431373
-      objectReference: {fileID: 0}
-    - target: {fileID: 3436659979834937070, guid: 4ee03bb01f780724c9f817de09cf0ddb,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 0.91372555
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ee03bb01f780724c9f817de09cf0ddb, type: 3}
 --- !u!114 &8903941572070690055 stripped

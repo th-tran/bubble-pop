@@ -10,6 +10,10 @@ public class MessageWindow : MonoBehaviour
     public Text messageText;
     public Text buttonText;
 
+    public Sprite winIcon;
+    public Sprite loseIcon;
+    public Sprite goalIcon;
+
     public void ShowMessage(Sprite sprite = null, string message = "", string buttonMsg = "start")
     {
         if (messageIcon != null)
@@ -28,4 +32,19 @@ public class MessageWindow : MonoBehaviour
         }
     }
 
+    public void ShowScoreMessage(int scoreGoal)
+    {
+        string message = "score goal \n" + scoreGoal.ToString();
+        ShowMessage(goalIcon, message, "start");
+    }
+
+    public void ShowWinMessage()
+    {
+        ShowMessage(winIcon, "level\ncomplete", "ok");
+    }
+
+    public void ShowLoseMessage()
+    {
+        ShowMessage(loseIcon, "level\nfailed", "ok");
+    }
 }

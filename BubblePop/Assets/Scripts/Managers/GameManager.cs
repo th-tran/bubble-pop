@@ -20,10 +20,6 @@ public class GameManager : Singleton<GameManager>
     }
     bool m_isWinner = false;
 
-    public Sprite loseIcon;
-    public Sprite winIcon;
-    public Sprite goalIcon;
-
     LevelGoal m_levelGoal;
     public LevelGoal LevelGoal
     {
@@ -116,7 +112,8 @@ public class GameManager : Singleton<GameManager>
             if (UIManager.Instance.messageWindow != null)
             {
                 UIManager.Instance.messageWindow.GetComponent<RectXformMover>().MoveOn();
-                UIManager.Instance.messageWindow.ShowMessage(goalIcon, "score goal\n" + m_levelGoal.scoreGoals[0].ToString(), "start");
+                int maxGoal = m_levelGoal.scoreGoals.Length - 1;
+                UIManager.Instance.messageWindow.ShowScoreMessage(m_levelGoal.scoreGoals[maxGoal]);
             }
         }
 
@@ -193,7 +190,7 @@ public class GameManager : Singleton<GameManager>
             if (UIManager.Instance != null && UIManager.Instance.messageWindow != null)
             {
                 UIManager.Instance.messageWindow.GetComponent<RectXformMover>().MoveOn();
-                UIManager.Instance.messageWindow.ShowMessage(winIcon, "YOU WIN!", "OK");
+                UIManager.Instance.messageWindow.ShowWinMessage();
             }
 
             if (SoundManager.Instance != null)
@@ -206,7 +203,7 @@ public class GameManager : Singleton<GameManager>
             if (UIManager.Instance != null && UIManager.Instance.messageWindow != null)
             {
                 UIManager.Instance.messageWindow.GetComponent<RectXformMover>().MoveOn();
-                UIManager.Instance.messageWindow.ShowMessage(loseIcon, "YOU LOSE!", "OK");
+                UIManager.Instance.messageWindow.ShowLoseMessage();
             }
 
             if (SoundManager.Instance != null)
