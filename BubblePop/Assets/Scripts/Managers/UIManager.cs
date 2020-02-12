@@ -36,25 +36,50 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
-    public void SetupCollectionGoalLayout(CollectionGoal[] collectionGoals)
+    public void SetupCollectionGoalLayout(CollectionGoal[] collectionGoals, GameObject goalLayout, int spacingWidth)
     {
-        if (collectionGoalLayout != null && collectionGoals != null && collectionGoals.Length != 0)
+        if (goalLayout != null && collectionGoals != null && collectionGoals.Length != 0)
         {
-            RectTransform rectXform = collectionGoalLayout.GetComponent<RectTransform>();
-            rectXform.sizeDelta = new Vector2(collectionGoals.Length * collectionGoalBaseWidth, rectXform.sizeDelta.y);
-            m_collectionGoalPanels = collectionGoalLayout.gameObject.GetComponentsInChildren<CollectionGoalPanel>();
+            RectTransform rectXform = goalLayout.GetComponent<RectTransform>();
+            rectXform.sizeDelta = new Vector2(collectionGoals.Length * spacingWidth, rectXform.sizeDelta.y);
 
-            for (int i = 0; i < m_collectionGoalPanels.Length; i++)
+            CollectionGoalPanel[] panels = goalLayout.GetComponentsInChildren<CollectionGoalPanel>();
+
+            for (int i = 0; i < panels.Length; i++)
             {
                 if (i < collectionGoals.Length && collectionGoals[i] != null)
                 {
-                    m_collectionGoalPanels[i].gameObject.SetActive(true);
-                    m_collectionGoalPanels[i].collectionGoal = collectionGoals[i];
-                    m_collectionGoalPanels[i].SetupPanel();
+                    panels[i].gameObject.SetActive(true);
+                    panels[i].collectionGoal = collectionGoals[i];
+                    panels[i].SetupPanel();
                 }
                 else
                 {
-                    m_collectionGoalPanels[i].gameObject.SetActive(false);
+                    panels[i].gameObject.SetActive(false);
+                }
+            }
+        }
+    }
+
+    public void SetupCollectionGoalLayout(CollectionGoal[] collectionGoals)
+    {
+        SetupCollectionGoalLayout(collectionGoals, collectionGoalLayout, collectionGoalBaseWidth);
+    }
+
+    public void UpdateCollectionGoalLayout(GameObject goalLayout)
+    {
+        if (goalLayout != null)
+        {
+            CollectionGoalPanel[] panels = goalLayout.GetComponentsInChildren<CollectionGoalPanel>();
+
+            if (panels != null && panels.Length != 0)
+            {
+                foreach (CollectionGoalPanel panel in panels)
+                {
+                    if (panel != null && panel.gameObject.activeInHierarchy)
+                    {
+                        panel.UpdatePanel();
+                    }
                 }
             }
         }
@@ -62,13 +87,7 @@ public class UIManager : Singleton<UIManager>
 
     public void UpdateCollectionGoalLayout()
     {
-        foreach (CollectionGoalPanel panel in m_collectionGoalPanels)
-        {
-            if (panel != null && panel.gameObject.activeInHierarchy)
-            {
-                panel.UpdatePanel();
-            }
-        }
+        UpdateCollectionGoalLayout(collectionGoalLayout);
     }
 
     public void EnableTimer(bool state)

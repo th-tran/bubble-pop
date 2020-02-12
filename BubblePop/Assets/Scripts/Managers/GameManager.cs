@@ -114,6 +114,25 @@ public class GameManager : Singleton<GameManager>
                 UIManager.Instance.messageWindow.GetComponent<RectXformMover>().MoveOn();
                 int maxGoal = m_levelGoal.scoreGoals.Length - 1;
                 UIManager.Instance.messageWindow.ShowScoreMessage(m_levelGoal.scoreGoals[maxGoal]);
+
+                if (m_levelGoal.levelCounter == LevelCounter.Timer)
+                {
+                    UIManager.Instance.messageWindow.ShowTimedGoal(m_levelGoal.timeLeft);
+                }
+                else
+                {
+                    UIManager.Instance.messageWindow.ShowMovesGoal(m_levelGoal.movesLeft);
+                }
+
+                if (m_levelGoalCollected != null)
+                {
+                    UIManager.Instance.messageWindow.ShowCollectionGoal();
+                    GameObject goalLayout = UIManager.Instance.messageWindow.collectionGoalLayout;
+                    if (goalLayout != null)
+                    {
+                        UIManager.Instance.SetupCollectionGoalLayout(m_levelGoalCollected.collectionGoals, goalLayout, 80);
+                    }
+                }
             }
         }
 
