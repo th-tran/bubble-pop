@@ -5204,6 +5204,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: MessageWindow
       objectReference: {fileID: 0}
+    - target: {fileID: 126597017, guid: 4ee03bb01f780724c9f817de09cf0ddb, type: 3}
+      propertyPath: goalFailedIcon
+      value: 
+      objectReference: {fileID: 21300000, guid: 509ae353101104640abd17024db0da83,
+        type: 3}
+    - target: {fileID: 126597017, guid: 4ee03bb01f780724c9f817de09cf0ddb, type: 3}
+      propertyPath: goalCompleteIcon
+      value: 
+      objectReference: {fileID: 21300000, guid: ddfea480fbaad6345b60f13204e6b1cf,
+        type: 3}
     - target: {fileID: 3436659979834937068, guid: 4ee03bb01f780724c9f817de09cf0ddb,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -206,29 +206,11 @@ public class GameManager : Singleton<GameManager>
 
         if (m_isWinner)
         {
-            if (UIManager.Instance != null && UIManager.Instance.messageWindow != null)
-            {
-                UIManager.Instance.messageWindow.GetComponent<RectXformMover>().MoveOn();
-                UIManager.Instance.messageWindow.ShowWinMessage();
-            }
-
-            if (SoundManager.Instance != null)
-            {
-                SoundManager.Instance.PlayWinSound();
-            }
+            ShowWinScreen();
         }
         else
         {
-            if (UIManager.Instance != null && UIManager.Instance.messageWindow != null)
-            {
-                UIManager.Instance.messageWindow.GetComponent<RectXformMover>().MoveOn();
-                UIManager.Instance.messageWindow.ShowLoseMessage();
-            }
-
-            if (SoundManager.Instance != null)
-            {
-                SoundManager.Instance.PlayLoseSound(0.5f);
-            }
+            ShowLoseScreen();
         }
 
         yield return new WaitForSeconds(1f);
@@ -244,6 +226,64 @@ public class GameManager : Singleton<GameManager>
 
         // TODO: Replace with proper retry option or return to menu
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    void ShowWinScreen()
+    {
+        if (UIManager.Instance != null && UIManager.Instance.messageWindow != null)
+        {
+            UIManager.Instance.messageWindow.GetComponent<RectXformMover>().MoveOn();
+            UIManager.Instance.messageWindow.ShowWinMessage();
+            UIManager.Instance.messageWindow.ShowCollectionGoal(false);
+
+            if (ScoreManager.Instance != null)
+            {
+                string scoreStr = "you scored\n" + ScoreManager.Instance.CurrentScore.ToString() + " points!";
+                UIManager.Instance.messageWindow.ShowGoalCaption(scoreStr, 0, 70);
+            }
+
+            if (UIManager.Instance.messageWindow.goalCompleteIcon != null)
+            {
+                UIManager.Instance.messageWindow.ShowGoalImage(UIManager.Instance.messageWindow.goalCompleteIcon);
+            }
+        }
+
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayWinSound();
+        }
+    }
+
+    void ShowLoseScreen()
+    {
+        if (UIManager.Instance != null && UIManager.Instance.messageWindow != null)
+        {
+            UIManager.Instance.messageWindow.GetComponent<RectXformMover>().MoveOn();
+            UIManager.Instance.messageWindow.ShowLoseMessage();
+            UIManager.Instance.messageWindow.ShowCollectionGoal(false);
+
+            string caption = "";
+            if (m_levelGoal.levelCounter == LevelCounter.Timer)
+            {
+                caption = "Out of time!";
+            }
+            else
+            {
+                caption = "Out of moves!";
+            }
+
+            UIManager.Instance.messageWindow.ShowGoalCaption(caption, 0, 70);
+
+            if (UIManager.Instance.messageWindow.goalFailedIcon != null)
+            {
+                UIManager.Instance.messageWindow.ShowGoalImage(UIManager.Instance.messageWindow.goalFailedIcon);
+            }
+        }
+
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayLoseSound(0.5f);
+        }
     }
 
     public void ReloadScene()

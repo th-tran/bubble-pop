@@ -18,6 +18,9 @@ public class MessageWindow : MonoBehaviour
     public Sprite timerIcon;
     public Sprite movesIcon;
 
+    public Sprite goalCompleteIcon;
+    public Sprite goalFailedIcon;
+
     public Image goalImage;
     public Text goalText;
 
@@ -59,14 +62,38 @@ public class MessageWindow : MonoBehaviour
 
     public void ShowGoal(string caption = "", Sprite icon = null)
     {
-        if (goalText != null && caption != "")
+        if (caption != "")
         {
-            goalText.text = caption;
+            ShowGoalCaption(caption);
         }
 
-        if (goalImage != null && icon != null)
+        if (icon != null)
         {
+            ShowGoalImage(icon);
+        }
+    }
+
+    public void ShowGoalCaption(string caption = "", int offsetX = 0, int offsetY = 0)
+    {
+        if (goalText != null)
+        {
+            goalText.text = caption;
+            RectTransform rectXform = goalText.GetComponent<RectTransform>();
+            rectXform.anchoredPosition += new Vector2(offsetX, offsetY);
+        }
+    }
+
+    public void ShowGoalImage(Sprite icon = null)
+    {
+        if (goalImage != null)
+        {
+            goalImage.gameObject.SetActive(true);
             goalImage.sprite = icon;
+        }
+
+        if (icon == null)
+        {
+            goalImage.gameObject.SetActive(false);
         }
     }
 
